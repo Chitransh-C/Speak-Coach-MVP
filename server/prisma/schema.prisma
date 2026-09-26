@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String            @id @default(uuid())
+  email        String            @unique
+  passwordHash String            @map("password_hash")
+  displayName  String            @map("display_name")
+  createdAt    DateTime          @default(now()) @map("created_at")
+  updatedAt    DateTime          @updatedAt @map("updated_at")
+  sessions     PracticeSession[]
+
+  @@map("users")
+}
+
+model PracticeSession {
+  id                  String     @id @default(uuid())
+  userId              String     @map("user_id")
+  scenarioId          String     @map("scenario_id")
+  status              String
+  sarvamInteractionId String?    @map("sarvam_interaction_id")
+  startedAt           DateTime   @default(now()) @map("started_at")
+  endedAt             DateTime?  @map("ended_at")
+  durationMs          Int?       @map("duration_ms")
+  createdAt           DateTime   @default(now()) @map("created_at")
+  user                User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transcript          Transcript?
+  score               Score?
+  latencyEvents       LatencyEvent[]
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([userId, scenarioId, status])
+  @@map("practice_sessions")
+}
+
+model Transcript {
+  id        String          @id @default(uuid())
+  sessionId String          @unique @map("session_id")
+  turns     Json
+  raw       Json?
+  createdAt DateTime        @default(now()) @map("created_at")
+  session   PracticeSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("transcripts")
+}
+
+model Score {
+  id           String          @id @default(uuid())
+  sessionId    String          @unique @map("session_id")
+  overall      Int
+  passed       Boolean
+  criteria     Json
+  strengths    Json
+  improvements Json
+  coachNotes   String          @map("coach_notes")
+  metrics      Json
+  model        String
+  createdAt    DateTime        @default(now()) @map("created_at")
+  session      PracticeSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("scores")
+}
+
+model LatencyEvent {
+  id        String          @id @default(uuid())
+  sessionId String          @map("session_id")
+  name      String
+  atMs      Int             @map("at_ms")
+  meta      Json?
+  createdAt DateTime        @default(now()) @map("created_at")
+  session   PracticeSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@map("latency_events")
+}

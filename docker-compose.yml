@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: speakcoach-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: speakcoach
+      POSTGRES_PASSWORD: speakcoach
+      POSTGRES_DB: speakcoach
+    volumes:
+      - speakcoach_pg_data:/var/lib/postgresql/data
+
+volumes:
+  speakcoach_pg_data:

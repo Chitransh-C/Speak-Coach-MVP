@@ -1,0 +1,50 @@
+{
+  "id": "scenario-001",
+  "title": "Interview Basics: Tell Me About Yourself",
+  "description": "Deliver a clear, structured self-introduction in a first-round interview and handle one follow-up probe.",
+  "track": "Interviews",
+  "level": "beginner",
+  "language": "English",
+  "estDurationMin": 10,
+  "practiceCallMin": 5,
+  "points": 100,
+  "passMark": 70,
+  "learn": {
+    "situation": "You are in a first-round screening interview for a professional role. The interviewer opens with a classic prompt and expects a concise, relevant story — not a full life history.",
+    "participant": {
+      "name": "Alex Rivera",
+      "role": "Hiring manager",
+      "tone": "Professional, warm, time-conscious",
+      "agenda": "Assess clarity, relevance, and composure under light pressure"
+    },
+    "whatGoodLooksLike": [
+      "Opens with a crisp positioning statement",
+      "Uses a simple structure (present → past → future, or PREP-style)",
+      "Ties experience to the role",
+      "Ends with a soft close / invitation for questions"
+    ],
+    "objectives": [
+      "Answer “Tell me about yourself” in under ~90 seconds of speaking time",
+      "Stay relevant to the job context",
+      "Handle one follow-up without freezing"
+    ]
+  },
+  "watch": {
+    "turns": [
+      { "speaker": "Alex", "text": "Thanks for joining today. To start — tell me about yourself." },
+      {
+        "speaker": "Learner",
+        "text": "I’m a product analyst with three years in B2B SaaS. Most recently I owned onboarding metrics at BrightCart, where we cut time-to-value by 28%. Before that I was in customer success, which taught me how to translate user friction into product changes. I’m excited about this role because it sits at that same intersection of data and customer outcomes — and I’d love to go deeper on how your team defines success in the first 90 days."
+      },
+      {
+        "speaker": "Alex",
+        "text": "That’s helpful. What would you say was the hardest part of that onboarding work?"
+      },
+      {
+        "speaker": "Learner",
+        "text": "Getting engineering and support aligned on what “activated” meant. We ran a two-week workshop, agreed on three events, and instrumented them the same week. Clarity beat more dashboards."
+      },
+      { "speaker": "Alex", "text": "Great — let’s dig into a project next." }
+    ]
+  }
+}

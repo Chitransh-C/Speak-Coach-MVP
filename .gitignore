@@ -1,0 +1,40 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies & builds
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+build/
+**/build/
+*.tsbuildinfo
+
+# Logs / OS
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+
+# Editor / tooling
+.vscode/
+.idea/
+*.swp
+.cursor/
+
+# Prisma
+server/prisma/*.db
+server/prisma/*.db-journal
+
+# Python smoke scripts
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Misc
+*.dex
+coverage/
+.turbo/
