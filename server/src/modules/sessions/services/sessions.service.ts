@@ -140,10 +140,14 @@ export const sessionsService = {
       startedAt: session.startedAt,
       endedAt: session.endedAt,
       transcript: session.transcript?.turns ?? null,
+      passMark: session.scenario.passMark,
+      scenarioTitle: session.scenario.title,
+      trackId: session.scenario.trackId,
       score: session.score
         ? {
             overall: session.score.overall,
             passed: session.score.passed,
+            passMark: session.scenario.passMark,
             criteria: session.score.criteria,
             strengths: session.score.strengths,
             improvements: session.score.improvements,

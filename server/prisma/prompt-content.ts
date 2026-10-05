@@ -35,6 +35,7 @@ const SCORECARD_SHAPE = `JSON shape:
       "name": string,
       "weight": number,
       "score": number 0-100,
+      "feedback": string,
       "evidence": [{ "timestampMs": number|null, "quote": string, "note": string }]
     }
   ],
@@ -46,7 +47,24 @@ const SCORECARD_SHAPE = `JSON shape:
     "questionsAsked": number,
     "fillerWordCount": number
   }
-}`;
+}
+
+## Report quality (mandatory — match a premium coach scorecard)
+- Transcript lines may include [mm:ss] markers. Use those times in strengths, improvements, feedback, and evidence.
+- Word limits (hard — stay concise; do not pad):
+  - coachNotes: 40–60 words total (one short block; can use a line break, not long essays).
+  - criteria[].feedback: 40–60 words each.
+  - each strengths / improvements bullet: 12–25 words, ending with [mm:ss].
+  - evidence[].note: ≤20 words; quote ≤15 words.
+- strengths: 2-3 bullets. Concrete behavior + timestamp.
+- improvements: 2-3 bullets. Actionable "do X instead of Y" + [mm:ss].
+- criteria[].feedback: why this criterion scored as it did; cite [mm:ss] / short quote.
+- criteria[].evidence: at least one item when speech supports it; timestampMs from [mm:ss] (e.g. [00:31] → 31000).
+- metrics.talkListenRatio MUST be learner word-share between 0 and 1 (learner_words / total_words). Never return values > 1.
+- Do not invent events, quotes, or timestamps not grounded in the transcript.
+- Never rewrite what the agent/interviewer said. Quote agent lines exactly when discussing listening/fit.
+- Scenario objectives may differ from the live agent question. Score listening against the *actual* agent question in the transcript; separately note if the learner also missed scenario objectives.
+- Be honest: low scores when objectives are missed, even if the speaker sounds polished.`;
 
 export const SCORING_SYSTEM_INTERVIEWS = `You are an expert interview coach and hiring-panel assessor scoring a practice interview transcript.
 
@@ -91,12 +109,9 @@ Low: claims without specifics, buzzwords only.
 - overall = weighted average of criterion scores using the weights above.
 - passed = overall >= 70.
 - Score the LEARNER / candidate only.
-- Use only the transcript. Do not invent quotes or events.
-- Each criterion should include at least one evidence item when learner speech supports it (short quote + note).
-- strengths: 2-4 bullets tied to observed behavior.
-- improvements: 2-4 actionable coaching bullets.
-- coachNotes: 2-4 sentences, constructive, specific.
-- metrics.talkListenRatio ≈ learner_words / max(agent_words, 1).
+- Use only the transcript. Follow the Report quality rules above.
+- Each criterion needs feedback + at least one evidence item when learner speech supports it.
+- metrics.talkListenRatio = learner_words / max(total_words, 1) (0-1 share).
 - metrics.questionsAsked = count of learner questions.
 - metrics.fillerWordCount ≈ um/uh/like/you know used as fillers.
 - If learner speech is under ~40 words, return {"insufficient": true} instead.`;
@@ -146,11 +161,9 @@ Low: vague claims with no substance.
 - overall = weighted average of criterion scores using the weights above.
 - passed = overall >= 70.
 - Score the LEARNER (seller) only.
-- Use only the transcript. Do not invent quotes or events.
-- Each criterion should include at least one evidence item when learner speech supports it.
-- strengths: 2-4 bullets. improvements: 2-4 actionable coaching bullets.
-- coachNotes: 2-4 sentences, constructive, specific.
-- metrics.talkListenRatio ≈ learner_words / max(agent_words, 1).
+- Use only the transcript. Follow the Report quality rules above.
+- Each criterion needs feedback + at least one evidence item when learner speech supports it.
+- metrics.talkListenRatio = learner_words / max(total_words, 1) (0-1 share).
 - metrics.questionsAsked = count of learner (seller) questions.
 - metrics.fillerWordCount ≈ um/uh/like/you know used as fillers.
 - If learner speech is under ~40 words, return {"insufficient": true} instead.`;
@@ -176,6 +189,11 @@ export const SCORING_USER_TEMPLATE = `Track: {{track}}
 Scenario id: {{scenario_id}}
 Scenario: {{scenario_title}}
 Pass mark: {{pass_mark}}.
+
+Accuracy rules for this transcript:
+- Lines may begin with [mm:ss]. Cite those times in strengths, improvements, feedback, and evidence.
+- Agent/interviewer lines are ground truth for what was asked. Do not invent a different question.
+- Scenario objectives (in the system prompt) are additional evaluation context; do not pretend the agent spoke them unless they appear in the transcript.
 
 TRANSCRIPT:
 {{transcript}}
@@ -209,6 +227,9 @@ ${good}
 
 ## Scenario-specific scoring emphasis
 Weight criterion scores using the track rubric above, but interpret High/Mid/Low in light of THIS scenario's objectives and "what good looks like".
+- Listening & Fit: score whether the learner answered the *actual* agent/partner question in the transcript (do not invent a different question).
+- Structure & Clarity + Evidence: also judge whether the answer advanced THIS scenario's objectives / what-good-looks-like. A polished answer to a different practice goal is Mid/Low on Structure if it misses the scenario objective.
+- Overall must reflect scenario readiness, not only local Q&A quality. Cap overall below ${s.passMark} when the main scenario objective is clearly unmet.
 Penalize answers that ignore the situation or fail the stated objectives even if generally articulate.
 Reward behaviors listed under what good looks like when clearly evidenced in the transcript.
 passed = overall >= ${s.passMark}.

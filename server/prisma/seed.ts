@@ -15,12 +15,21 @@ const WORKSPACE = "01a10b46-c953-7fee-8018-bd18dfe8d310";
  * (replaces persona-hardcoded Alex Rivera).
  */
 const INTERVIEWS_APP = "SpeakCoach--2af8ce6a-b04b";
-const INTERVIEWS_VERSION = 2;
+const INTERVIEWS_VERSION = 4;
 /**
- * Sales track: SpeakCoach Sales buyer uses {{ variables }} — multiple scenarios share one agent.
+ * Sales track: browser SDK does not override TTS speaker at call start, so we pin
+ * two Voice Agents and assign by participant gender.
+ * Greeting on all agents: "Hello, thanks for joining the call."
+ * - Female: SpeakCoach Sales (priya) — committed v5
+ * - Male: SpeakCoach Sales Male (shubh) — committed v3
  */
-const SALES_APP: string | null = "SpeakCoach--e8102ca0-0c25";
-const SALES_VERSION = 2;
+const SALES_APP_FEMALE = "SpeakCoach--e8102ca0-0c25";
+const SALES_APP_FEMALE_VERSION = 5;
+const SALES_APP_MALE = "SpeakCoach--7b2c1d05-a7e3";
+const SALES_APP_MALE_VERSION = 3;
+/** Track fallback = female agent (most sales buyers are female). */
+const SALES_APP = SALES_APP_FEMALE;
+const SALES_VERSION = SALES_APP_FEMALE_VERSION;
 
 type Learn = {
   greeting: string;
@@ -108,21 +117,22 @@ async function main() {
       id: "sales",
       title: "Sales",
       description:
-        "Buyer role-play via one Sales Voice Agent; each scenario injects different {{ variables }}.",
+        "Buyer role-play via male/female Sales Voice Agents (TTS pinned in Indus); scenarios inject {{ variables }}.",
       sortOrder: 2,
       sarvamOrgId: ORG,
       sarvamWorkspaceId: WORKSPACE,
       sarvamAppId: SALES_APP,
-      sarvamVersion: SALES_APP ? SALES_VERSION : null,
+      sarvamVersion: SALES_VERSION,
     },
     update: {
       title: "Sales",
       description:
-        "Buyer role-play via one Sales Voice Agent; each scenario injects different {{ variables }}.",
+        "Buyer role-play via male/female Sales Voice Agents (TTS pinned in Indus); scenarios inject {{ variables }}.",
       sortOrder: 2,
       sarvamOrgId: ORG,
       sarvamWorkspaceId: WORKSPACE,
-      ...(SALES_APP ? { sarvamAppId: SALES_APP, sarvamVersion: SALES_VERSION } : {}),
+      sarvamAppId: SALES_APP,
+      sarvamVersion: SALES_VERSION,
     },
   });
 
@@ -490,12 +500,43 @@ async function main() {
   );
 }
 
+function salesAgentForGender(gender: "male" | "female"): {
+  sarvamOrgId: string;
+  sarvamWorkspaceId: string;
+  sarvamAppId: string;
+  sarvamVersion: number;
+} {
+  if (gender === "female") {
+    return {
+      sarvamOrgId: ORG,
+      sarvamWorkspaceId: WORKSPACE,
+      sarvamAppId: SALES_APP_FEMALE,
+      sarvamVersion: SALES_APP_FEMALE_VERSION,
+    };
+  }
+  return {
+    sarvamOrgId: ORG,
+    sarvamWorkspaceId: WORKSPACE,
+    sarvamAppId: SALES_APP_MALE,
+    sarvamVersion: SALES_APP_MALE_VERSION,
+  };
+}
+
 async function upsertScenario(
   s: SeedScenario,
   availability: "live" | "coming_soon" = "live",
 ) {
   const gender = s.learn.participant.gender;
   const defaultVoice = gender === "female" ? "priya" : "shubh";
+  const agentOverride =
+    s.trackId === "sales"
+      ? salesAgentForGender(gender)
+      : {
+          sarvamOrgId: null as string | null,
+          sarvamWorkspaceId: null as string | null,
+          sarvamAppId: null as string | null,
+          sarvamVersion: null as number | null,
+        };
   const base = {
     trackId: s.trackId,
     title: s.title,
@@ -511,10 +552,7 @@ async function upsertScenario(
     voices: [] as string[],
     defaultLanguage: "en-IN",
     defaultVoice,
-    sarvamOrgId: null as string | null,
-    sarvamWorkspaceId: null as string | null,
-    sarvamAppId: null as string | null,
-    sarvamVersion: null as number | null,
+    ...agentOverride,
     learn: s.learn,
     watch: s.watch,
   };

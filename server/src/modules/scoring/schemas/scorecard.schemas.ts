@@ -11,6 +11,8 @@ export const criterionSchema = z.object({
   name: z.string(),
   weight: z.number(),
   score: z.number().min(0).max(100),
+  /** Narrative why this criterion scored as it did (timestamped when possible). */
+  feedback: z.string().default(""),
   evidence: z.array(evidenceSchema).default([]),
 });
 

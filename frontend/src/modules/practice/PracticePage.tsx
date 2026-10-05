@@ -51,6 +51,8 @@ export function PracticePage() {
   const latency = useRef<LatencyEvent[]>([]);
   const turnsRef = useRef<Turn[]>([]);
   const phaseRef = useRef<CallPhase>("idle");
+  const sessionIdRef = useRef<string | null>(null);
+  const finishingRef = useRef(false);
   const transcriptBodyRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -60,6 +62,10 @@ export function PracticePage() {
   useEffect(() => {
     phaseRef.current = phase;
   }, [phase]);
+
+  useEffect(() => {
+    sessionIdRef.current = sessionId;
+  }, [sessionId]);
 
   useEffect(() => {
     const el = transcriptBodyRef.current;
@@ -73,14 +79,86 @@ export function PracticePage() {
     };
   }, []);
 
+  /** Append, or replace last turn when Sarvam streams progressive STT for the same speaker. */
   function pushTurn(turn: Turn) {
-    setTurns((prev) => [...prev, turn]);
+    setTurns((prev) => {
+      if (prev.length === 0) return [turn];
+      const last = prev[prev.length - 1];
+      if (last.speaker !== turn.speaker) return [...prev, turn];
+      const prevText = last.text.trim();
+      const nextText = turn.text.trim();
+      if (!prevText || !nextText) return [...prev, turn];
+      const progressive =
+        nextText === prevText ||
+        nextText.startsWith(prevText) ||
+        prevText.startsWith(nextText);
+      if (!progressive) return [...prev, turn];
+      const merged: Turn = {
+        ...turn,
+        text: nextText.length >= prevText.length ? nextText : prevText,
+        startedAtMs: last.startedAtMs ?? turn.startedAtMs,
+        endedAtMs: turn.endedAtMs ?? last.endedAtMs,
+      };
+      return [...prev.slice(0, -1), merged];
+    });
+  }
+
+  async function endAndScore() {
+    if (finishingRef.current) return;
+    const id = sessionIdRef.current;
+    if (!id) return;
+    finishingRef.current = true;
+    setPhase("ending");
+    setError(null);
+    try {
+      await agentRef.current?.stop();
+    } catch {
+      /* ignore hangup races */
+    }
+    agentRef.current = null;
+
+    const tScore0 = performance.now();
+    const transcriptTurns =
+      turnsRef.current.length > 0
+        ? turnsRef.current
+        : [{ speaker: "System", text: "(no speech captured)" }];
+
+    try {
+      await api(`/sessions/${id}/complete`, {
+        method: "POST",
+        token,
+        body: JSON.stringify({
+          endedAt: new Date().toISOString(),
+          transcript: { turns: transcriptTurns },
+          latency: {
+            events: [
+              ...latency.current,
+              {
+                name: "score_request",
+                atMs: Math.round(performance.now() - t0.current),
+              },
+            ],
+          },
+        }),
+      });
+      latency.current.push({
+        name: "score_done",
+        atMs: Math.round(performance.now() - t0.current),
+        meta: { scoreMs: Math.round(performance.now() - tScore0) },
+      });
+      navigate(`/sessions/${id}/feedback`);
+    } catch (err) {
+      finishingRef.current = false;
+      setPhase("error");
+      setError(err instanceof HttpError ? err.message : "Scoring failed");
+    }
   }
 
   async function startCall() {
     setError(null);
     setPhase("connecting");
     setTurns([]);
+    finishingRef.current = false;
     latency.current = [];
     t0.current = performance.now();
 
@@ -105,6 +183,7 @@ export function PracticePage() {
         }),
       });
       setSessionId(created.sessionId);
+      sessionIdRef.current = created.sessionId;
       const name = created.participantName || "Agent";
       setParticipantName(name);
       participantRef.current = name;
@@ -180,7 +259,11 @@ export function PracticePage() {
           }
         },
         endCallback: async () => {
-          if (phaseRef.current === "live") setPhase("idle");
+          // Agent hangup (or stop()) — score and route to feedback once.
+          if (finishingRef.current) return;
+          if (phaseRef.current === "live" || phaseRef.current === "connecting") {
+            void endAndScore();
+          }
         },
       });
 
@@ -200,53 +283,6 @@ export function PracticePage() {
             ? err.message
             : "Could not start call",
       );
-    }
-  }
-
-  async function endAndScore() {
-    if (!sessionId) return;
-    setPhase("ending");
-    setError(null);
-    try {
-      await agentRef.current?.stop();
-    } catch {
-      /* ignore hangup races */
-    }
-    agentRef.current = null;
-
-    const tScore0 = performance.now();
-    const transcriptTurns =
-      turnsRef.current.length > 0
-        ? turnsRef.current
-        : [{ speaker: "System", text: "(no speech captured)" }];
-
-    try {
-      await api(`/sessions/${sessionId}/complete`, {
-        method: "POST",
-        token,
-        body: JSON.stringify({
-          endedAt: new Date().toISOString(),
-          transcript: { turns: transcriptTurns },
-          latency: {
-            events: [
-              ...latency.current,
-              {
-                name: "score_request",
-                atMs: Math.round(performance.now() - t0.current),
-              },
-            ],
-          },
-        }),
-      });
-      latency.current.push({
-        name: "score_done",
-        atMs: Math.round(performance.now() - t0.current),
-        meta: { scoreMs: Math.round(performance.now() - tScore0) },
-      });
-      navigate(`/sessions/${sessionId}/feedback`);
-    } catch (err) {
-      setPhase("error");
-      setError(err instanceof HttpError ? err.message : "Scoring failed");
     }
   }
 

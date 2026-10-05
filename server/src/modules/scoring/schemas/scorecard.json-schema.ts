@@ -38,13 +38,18 @@ const criterionItem = {
       minimum: 0,
       maximum: 100,
     },
+    feedback: {
+      type: "string",
+      description:
+        "40-60 words: why this criterion scored as it did; include [mm:ss] and a short quote",
+    },
     evidence: {
       type: "array",
       items: evidenceItem,
       description: "Evidence quotes supporting the score",
     },
   },
-  required: ["id", "name", "weight", "score", "evidence"],
+  required: ["id", "name", "weight", "score", "feedback", "evidence"],
 } as const;
 
 const scorecardObject = {
@@ -70,23 +75,27 @@ const scorecardObject = {
     strengths: {
       type: "array",
       items: { type: "string" },
-      description: "2-4 strengths tied to observed behavior",
+      description:
+        "2-3 strengths; each 12-25 words, ends with [mm:ss], cites concrete behavior",
     },
     improvements: {
       type: "array",
       items: { type: "string" },
-      description: "2-4 actionable coaching improvements",
+      description: "2-3 actionable improvements; each 12-25 words, ends with [mm:ss]",
     },
     coachNotes: {
       type: "string",
-      description: "2-4 sentence constructive summary",
+      description:
+        "40-60 words total: what happened with timestamps, then one concrete practice tip",
     },
     metrics: {
       type: "object",
       properties: {
         talkListenRatio: {
           type: "number",
-          description: "Approx learner_words / max(agent_words, 1)",
+          description: "Learner word-share 0-1 (learner_words / total_words)",
+          minimum: 0,
+          maximum: 1,
         },
         questionsAsked: {
           type: "number",

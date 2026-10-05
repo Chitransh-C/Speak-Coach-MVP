@@ -64,14 +64,9 @@ export function buildAgentVariables(
     participant_agenda: participant.agenda ?? "",
     objectives: objectives.map((o, i) => `${i + 1}. ${o}`).join("\n"),
     what_good_looks_like: good.map((o, i) => `${i + 1}. ${o}`).join("\n"),
-    greeting:
-      learn.greeting ??
-      defaultGreeting(participant.name ?? "the interviewer", scenario.title),
+    // Fixed opener for all scenarios (matches Indus agent Greeting).
+    greeting: "Hello, thanks for joining the call.",
   };
-}
-
-function defaultGreeting(name: string, title: string): string {
-  return `Thanks for joining today. I'm ${name}. We'll practice: ${title}. Let's begin.`;
 }
 
 export function canPracticeScenario(scenario: Scenario & { track: Track }): boolean {

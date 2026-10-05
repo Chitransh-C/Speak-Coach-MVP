@@ -65,13 +65,15 @@ One committed agent **per track**, variable-driven (`{{ participant_name }}`, `{
 
 Current pins (seed):
 
-| Track | App id | Version |
-|---|---|---|
-| Interviews | `SpeakCoach--2af8ce6a-b04b` | `1` |
-| Sales | `SpeakCoach--e8102ca0-0c25` | `1` |
+| Track / role | App id | Version | TTS | Greeting |
+|---|---|---|---|---|
+| Interviews | `SpeakCoach--2af8ce6a-b04b` | `4` | `shubh` | Hello, thanks for joining the call. |
+| Sales (female buyers) | `SpeakCoach--e8102ca0-0c25` | `5` | `priya` | Hello, thanks for joining the call. |
+| Sales (male buyers) | `SpeakCoach--7b2c1d05-a7e3` | `3` | `shubh` | Hello, thanks for joining the call. |
 
 **Languages:** English + 9 Indic (SpeakCoach central catalog). Default English.  
-**Speaking:** Voice `shubh` (gender preference in Setup; browser SDK does not yet override TTS speaker at call start). Commit after Indus edits and bump `sarvam_version` in seed.
+**Speaking:** Browser SDK does not override TTS at call start — seed assigns a gender-matched Sales agent per scenario (`priya` / `shubh`).  
+**Greeting:** Fixed on all agents: “Hello, thanks for joining the call.”
 
 ## Local scripts
 
