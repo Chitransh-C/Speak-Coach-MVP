@@ -1,26 +1,23 @@
-# Acceptance criteria (MVP)
+# Acceptance criteria (v1)
 
 ## Environment
-- [ ] `docker compose up -d` starts Postgres only (no app containers)
-- [ ] `server` and `frontend` run with host Node (`npm run dev`)
-- [ ] `server/.env` has `DATABASE_URL` + Voice Agents `sk_samvaad_…` keys
+- [ ] `docker compose up -d` starts Postgres only
+- [ ] `server/.env` has `DATABASE_URL`, `JWT_SECRET`, `SARVAM_API_KEY` — **no** scenario app/org/workspace
+- [ ] `npx prisma db push` + `npm run db:seed` load tracks + scenario-001 + stubs
 
-## Auth & scenario
-- [ ] Signup / login works; JWT required for scenario/session APIs
-- [ ] Home lists Scenario 001
-- [ ] Learn → Watch → Practice flow is navigable
+## Catalog
+- [ ] `GET /tracks` returns Interviews + Sales
+- [ ] Home shows multiple cards + track filter
+- [ ] Live scenarios resolve Voice Agent from track (or scenario override)
+- [ ] Session create returns `agentVariables` + `initialBotMessage`
+- [ ] Coming-soon stubs cannot start practice
+- [ ] `scenario-001` Learn → Watch → Setup → Practice → Feedback works
 
-## Live practice (Chrome)
-- [ ] Start call obtains signed URL via `/api/sarvam/...` proxy (key never in browser)
-- [ ] Two-way English audio with Alex Rivera
-- [ ] Live transcript shows Alex / Learner turns
-- [ ] Mic: prefer headset; laptop array often needs ~8× gain (see scripts)
-
-## Scoring
-- [ ] End & score persists transcript and returns scorecard (or clear insufficient-transcript error)
-- [ ] Feedback shows overall, pass/fail (≥70), criteria bars, strengths, improvements
+## Sessions
+- [ ] Setup language/voice persisted on session
+- [ ] Agent config for call comes from Scenario row
+- [ ] Signed URL via `/api/sarvam/...` returns 200
 
 ## Demo notes
-- Use Chrome; grant mic permission
-- Pin agent version `1`
-- If call drops in ~10–15s, mic level is usually too quiet — run `scripts/mic-check.py`
+- Chrome + mic; headset preferred
+- End & score required for feedback

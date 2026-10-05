@@ -6,6 +6,9 @@ export async function registerSessionsModule(app: FastifyInstance) {
   app.post("/api/v1/sessions", { preHandler: requireAuth }, (req, reply) =>
     sessionsController.create(req, reply),
   );
+  app.get("/api/v1/sessions", { preHandler: requireAuth }, (req, reply) =>
+    sessionsController.list(req, reply),
+  );
   app.get("/api/v1/sessions/:sessionId", { preHandler: requireAuth }, (req, reply) =>
     sessionsController.get(req, reply),
   );

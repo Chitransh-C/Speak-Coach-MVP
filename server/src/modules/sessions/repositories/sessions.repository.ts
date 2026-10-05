@@ -1,23 +1,43 @@
 import { prisma } from "../../../shared/db/prisma.js";
 
 export const sessionsRepository = {
-  create(userId: string, scenarioId: string) {
+  create(
+    userId: string,
+    scenarioId: string,
+    setup: { language: string; voice: string },
+  ) {
     return prisma.practiceSession.create({
-      data: { userId, scenarioId, status: "created" },
+      data: {
+        userId,
+        scenarioId,
+        status: "created",
+        language: setup.language,
+        voice: setup.voice,
+      },
     });
   },
 
   findById(id: string) {
     return prisma.practiceSession.findUnique({
       where: { id },
-      include: { transcript: true, score: true, latencyEvents: true },
+      include: {
+        transcript: true,
+        score: true,
+        latencyEvents: true,
+        scenario: true,
+      },
     });
   },
 
-  markLive(id: string) {
-    return prisma.practiceSession.update({
-      where: { id },
-      data: { status: "live", startedAt: new Date() },
+  listForUser(userId: string, limit = 50) {
+    return prisma.practiceSession.findMany({
+      where: { userId, status: "completed" },
+      orderBy: { createdAt: "desc" },
+      take: limit,
+      include: {
+        score: true,
+        scenario: { include: { track: true } },
+      },
     });
   },
 
@@ -48,7 +68,7 @@ export const sessionsRepository = {
       return tx.practiceSession.update({
         where: { id },
         data: { status: "completed", endedAt: data.endedAt },
-        include: { transcript: true, score: true },
+        include: { transcript: true, score: true, scenario: true },
       });
     });
   },

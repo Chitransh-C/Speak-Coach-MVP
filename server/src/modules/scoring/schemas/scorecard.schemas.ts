@@ -11,6 +11,8 @@ export const criterionSchema = z.object({
   name: z.string(),
   weight: z.number(),
   score: z.number().min(0).max(100),
+  /** Narrative why this criterion scored as it did (timestamped when possible). */
+  feedback: z.string().default(""),
   evidence: z.array(evidenceSchema).default([]),
 });
 
@@ -19,14 +21,20 @@ export const scorecardSchema = z.object({
   passed: z.boolean(),
   passMark: z.number().default(70),
   criteria: z.array(criterionSchema),
-  strengths: z.array(z.string()),
-  improvements: z.array(z.string()),
-  coachNotes: z.string(),
-  metrics: z.object({
-    talkListenRatio: z.number(),
-    questionsAsked: z.number(),
-    fillerWordCount: z.number(),
-  }),
+  strengths: z.array(z.string()).default([]),
+  improvements: z.array(z.string()).default([]),
+  coachNotes: z.string().default(""),
+  metrics: z
+    .object({
+      talkListenRatio: z.number(),
+      questionsAsked: z.number(),
+      fillerWordCount: z.number(),
+    })
+    .default({
+      talkListenRatio: 0.5,
+      questionsAsked: 0,
+      fillerWordCount: 0,
+    }),
 });
 
 export const insufficientSchema = z.object({

@@ -19,17 +19,69 @@ model User {
   @@map("users")
 }
 
+model Track {
+  id                String     @id
+  title             String
+  description       String     @default("")
+  sortOrder         Int        @default(0) @map("sort_order")
+  /// Default Voice Agent for scenarios on this track (variable-driven prompts).
+  sarvamOrgId       String?    @map("sarvam_org_id")
+  sarvamWorkspaceId String?    @map("sarvam_workspace_id")
+  sarvamAppId       String?    @map("sarvam_app_id")
+  sarvamVersion     Int?       @map("sarvam_version")
+  scenarios         Scenario[]
+  createdAt         DateTime   @default(now()) @map("created_at")
+  updatedAt         DateTime   @updatedAt @map("updated_at")
+
+  @@map("tracks")
+}
+
+model Scenario {
+  id                 String            @id
+  trackId            String            @map("track_id")
+  title              String
+  description        String
+  level              String
+  estDurationMin     Int               @map("est_duration_min")
+  practiceCallMin    Int               @map("practice_call_min")
+  points             Int               @default(100)
+  passMark           Int               @default(70) @map("pass_mark")
+  availability       String            @default("coming_soon")
+  languages          Json
+  voices             Json
+  defaultLanguage    String            @map("default_language")
+  defaultVoice       String            @map("default_voice")
+  /// Optional override: use a dedicated agent instead of the track agent.
+  sarvamOrgId        String?           @map("sarvam_org_id")
+  sarvamWorkspaceId  String?           @map("sarvam_workspace_id")
+  sarvamAppId        String?           @map("sarvam_app_id")
+  sarvamVersion      Int?              @map("sarvam_version")
+  learn              Json
+  watch              Json
+  createdAt          DateTime          @default(now()) @map("created_at")
+  updatedAt          DateTime          @updatedAt @map("updated_at")
+  track              Track             @relation(fields: [trackId], references: [id], onDelete: Restrict)
+  sessions           PracticeSession[]
+
+  @@index([trackId])
+  @@index([availability])
+  @@map("scenarios")
+}
+
 model PracticeSession {
   id                  String     @id @default(uuid())
   userId              String     @map("user_id")
   scenarioId          String     @map("scenario_id")
   status              String
+  language            String?
+  voice               String?
   sarvamInteractionId String?    @map("sarvam_interaction_id")
   startedAt           DateTime   @default(now()) @map("started_at")
   endedAt             DateTime?  @map("ended_at")
   durationMs          Int?       @map("duration_ms")
   createdAt           DateTime   @default(now()) @map("created_at")
   user                User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  scenario            Scenario   @relation(fields: [scenarioId], references: [id], onDelete: Restrict)
   transcript          Transcript?
   score               Score?
   latencyEvents       LatencyEvent[]
@@ -78,4 +130,23 @@ model LatencyEvent {
 
   @@index([sessionId])
   @@map("latency_events")
+}
+
+/// Editable prompt library (scoring + voice-agent instruction mirrors).
+model Prompt {
+  id         String   @id
+  /// scoring_system | scoring_user | voice_agent
+  kind       String
+  /// interviews | sales | null (default / shared)
+  trackId    String?  @map("track_id")
+  /// When set, this scoring prompt is scenario-specific (preferred over track).
+  scenarioId String?  @map("scenario_id")
+  title      String   @default("")
+  body       String
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@index([kind, trackId])
+  @@index([kind, scenarioId])
+  @@map("prompts")
 }

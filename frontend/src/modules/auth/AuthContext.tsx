@@ -48,7 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(
     async (email: string, password: string) => {
-      const res = await api<{ user: User; token: string }>("/api/v1/auth/login", {
+      const res = await api<{ user: User; token: string }>("/auth/login", {
         method: "POST",
         body: JSON.stringify({ email, password }),
       });
@@ -59,7 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signup = useCallback(
     async (email: string, password: string, displayName: string) => {
-      const res = await api<{ user: User; token: string }>("/api/v1/auth/signup", {
+      const res = await api<{ user: User; token: string }>("/auth/signup", {
         method: "POST",
         body: JSON.stringify({ email, password, displayName }),
       });

@@ -6,12 +6,6 @@ import {
   createSessionSchema,
 } from "../schemas/sessions.schemas.js";
 
-function originFromRequest(request: FastifyRequest): string {
-  const proto = (request.headers["x-forwarded-proto"] as string) || "http";
-  const host = request.headers.host || `localhost:${process.env.PORT || 3001}`;
-  return `${proto}://${host}`;
-}
-
 export const sessionsController = {
   async create(request: FastifyRequest, reply: FastifyReply) {
     if (!request.user) throw new AppError(401, "UNAUTHORIZED", "Missing user");
@@ -19,12 +13,13 @@ export const sessionsController = {
     if (!parsed.success) {
       throw new AppError(400, "VALIDATION_ERROR", parsed.error.message);
     }
-    const result = await sessionsService.create(
-      request.user.id,
-      parsed.data,
-      originFromRequest(request),
-    );
+    const result = await sessionsService.create(request.user.id, parsed.data);
     return reply.code(201).send(result);
+  },
+
+  async list(request: FastifyRequest, reply: FastifyReply) {
+    if (!request.user) throw new AppError(401, "UNAUTHORIZED", "Missing user");
+    return reply.send(await sessionsService.list(request.user.id));
   },
 
   async get(request: FastifyRequest, reply: FastifyReply) {
