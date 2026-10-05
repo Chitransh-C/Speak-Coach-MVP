@@ -2,10 +2,13 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Link, useParams } from "react-router-dom";
 import { api, HttpError } from "@/shared/api/client";
 import { useAuth } from "@/modules/auth/AuthContext";
+import { JourneyStepper } from "@/shared/ui/JourneyStepper";
 
 type ScenarioDetail = {
   id: string;
   title: string;
+  availability: string;
+  canPractice: boolean;
   learn: {
     situation: string;
     participant: { name: string; role: string; tone: string; agenda: string };
@@ -15,31 +18,18 @@ type ScenarioDetail = {
   watch: { turns: { speaker: string; text: string }[] };
 };
 
-function StepNav({ active }: { active: "learn" | "watch" | "practice" | "feedback" }) {
-  const order = ["learn", "watch", "practice", "feedback"] as const;
-  const idx = order.indexOf(active);
-  return (
-    <div className="steps">
-      {order.map((s, i) => (
-        <span
-          key={s}
-          className={`step ${i === idx ? "active" : ""} ${i < idx ? "done" : ""}`}
-        >
-          {s}
-        </span>
-      ))}
-    </div>
-  );
-}
-
 function useScenario() {
-  const { scenarioId = "scenario-001" } = useParams();
+  const { scenarioId = "" } = useParams();
   const { token } = useAuth();
   const [data, setData] = useState<ScenarioDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    api<ScenarioDetail>(`/api/v1/scenarios/${scenarioId}`, { token })
+    if (!scenarioId) {
+      setError("Missing scenario");
+      return;
+    }
+    api<ScenarioDetail>(`/scenarios/${scenarioId}`, { token })
       .then(setData)
       .catch((err) =>
         setError(err instanceof HttpError ? err.message : "Failed to load scenario"),
@@ -54,20 +44,28 @@ function Shell({
   title,
   children,
 }: {
-  active: "learn" | "watch" | "practice" | "feedback";
+  active: "learn" | "watch" | "setup" | "practice" | "feedback";
   title: string;
   children: ReactNode;
 }) {
   return (
     <div className="stack-md">
       <Link to="/" className="muted">
-        ← Home
+        ← Practice catalog
       </Link>
-      <h1>{title}</h1>
-      <StepNav active={active} />
+      <h1 className="page-title" style={{ fontSize: "clamp(1.6rem, 3vw, 2.2rem)" }}>
+        {title}
+      </h1>
+      <JourneyStepper active={active} />
       {children}
     </div>
   );
+}
+
+function isAgentSpeaker(speaker: string, participantName: string) {
+  if (/learner|user/i.test(speaker)) return false;
+  if (speaker === participantName) return true;
+  return !/learner/i.test(speaker);
 }
 
 export function LearnPage() {
@@ -78,18 +76,33 @@ export function LearnPage() {
   return (
     <Shell active="learn" title={data.title}>
       <section className="panel stack-md">
+        <div className="eyebrow">
+          <span className="eyebrow-dot" />
+          Scenario brief
+        </div>
         <div>
           <h2>Situation</h2>
           <p className="muted" style={{ marginTop: "0.4rem" }}>
             {learn.situation}
           </p>
         </div>
-        <div>
-          <h2>Meet {learn.participant.name}</h2>
-          <p className="muted" style={{ marginTop: "0.4rem" }}>
-            {learn.participant.role} · {learn.participant.tone}
-          </p>
-          <p className="muted">{learn.participant.agenda}</p>
+        <div className="partner-inset">
+          <span className="partner-avatar">
+            {learn.participant.name
+              .split(/\s+/)
+              .slice(0, 2)
+              .map((p) => p[0])
+              .join("")}
+          </span>
+          <div>
+            <div className="partner-name">{learn.participant.name}</div>
+            <div className="partner-role">
+              {learn.participant.role} · {learn.participant.tone}
+            </div>
+            <p className="muted" style={{ marginTop: "0.25rem", fontSize: "0.85rem" }}>
+              {learn.participant.agenda}
+            </p>
+          </div>
         </div>
         <div>
           <h2>What good looks like</h2>
@@ -121,29 +134,34 @@ export function WatchPage() {
   const { scenarioId, data, error } = useScenario();
   if (error) return <div className="error-banner">{error}</div>;
   if (!data) return <p className="muted">Loading model dialogue…</p>;
+  const participantName = data.learn.participant.name;
   return (
     <Shell active="watch" title={data.title}>
       <section className="panel">
         <p className="muted" style={{ marginBottom: "1rem" }}>
           Read a strong sample exchange before you go live.
         </p>
-        <div className="dialogue">
-          {data.watch.turns.map((t, i) => (
-            <div
-              key={`${t.speaker}-${i}`}
-              className={`bubble ${t.speaker === "Alex" ? "alex" : "learner"}`}
-            >
-              <div className="who">{t.speaker}</div>
-              <div>{t.text}</div>
-            </div>
-          ))}
-        </div>
+        {data.watch.turns.length === 0 ? (
+          <p className="muted">Sample dialogue coming soon.</p>
+        ) : (
+          <div className="dialogue">
+            {data.watch.turns.map((t, i) => (
+              <div
+                key={`${t.speaker}-${i}`}
+                className={`bubble ${isAgentSpeaker(t.speaker, participantName) ? "agent" : "learner"}`}
+              >
+                <div className="who">{t.speaker}</div>
+                <div>{t.text}</div>
+              </div>
+            ))}
+          </div>
+        )}
         <div className="actions">
           <Link className="btn btn-ghost" to={`/scenarios/${scenarioId}/learn`}>
             Back
           </Link>
-          <Link className="btn btn-accent" to={`/scenarios/${scenarioId}/practice`}>
-            I’m ready — Practice
+          <Link className="btn btn-accent" to={`/scenarios/${scenarioId}/setup`}>
+            Continue to setup
           </Link>
         </div>
       </section>

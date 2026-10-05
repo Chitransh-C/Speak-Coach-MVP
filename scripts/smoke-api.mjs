@@ -1,18 +1,25 @@
 const base = "http://localhost:3001";
 
 async function main() {
-  const loginRes = await fetch(`${base}/api/v1/auth/login`, {
+  const email = `v1-${Date.now()}@speakcoach.test`;
+  const signupRes = await fetch(`${base}/api/v1/auth/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      email: "demo@speakcoach.test",
+      email,
       password: "password123",
+      displayName: "V1 Tester",
     }),
   });
-  const login = await loginRes.json();
-  console.log("login", loginRes.status, login.user?.email || login);
-  const token = login.token;
+  const signup = await signupRes.json();
+  console.log("signup", signupRes.status, signup.user?.email || signup);
+  const token = signup.token;
   if (!token) process.exit(1);
+
+  const tracks = await fetch(`${base}/api/v1/tracks`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  console.log("tracks", tracks.status, await tracks.text());
 
   const scen = await fetch(`${base}/api/v1/scenarios`, {
     headers: { Authorization: `Bearer ${token}` },
@@ -25,44 +32,30 @@ async function main() {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ scenarioId: "scenario-001" }),
+    body: JSON.stringify({
+      scenarioId: "scenario-001",
+      language: "en-IN",
+      voice: "shubh",
+    }),
   });
   const sess = await sessRes.json();
   console.log("session", sessRes.status, JSON.stringify(sess, null, 2));
+  if (!sess.agent) process.exit(1);
 
   const a = sess.agent;
-  const url = `${base}/api/sarvam/orgs/${a.orgId}/workspaces/${a.workspaceId}/apps/${a.appId}/url?interaction_type=call&version=1`;
-  console.log("proxy url", url);
+  const url = `${base}/api/sarvam/orgs/${a.orgId}/workspaces/${a.workspaceId}/apps/${a.appId}/url?interaction_type=call&version=${a.version}`;
   const proxy = await fetch(url);
-  const body = await proxy.text();
-  console.log("proxy", proxy.status, body.slice(0, 300));
+  console.log("proxy", proxy.status, (await proxy.text()).slice(0, 200));
 
-  const complete = await fetch(`${base}/api/v1/sessions/${sess.sessionId}/complete`, {
+  const blocked = await fetch(`${base}/api/v1/sessions`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      transcript: {
-        turns: [
-          { speaker: "Alex", text: "Tell me about yourself." },
-          {
-            speaker: "Learner",
-            text:
-              "I am a product analyst with three years in B2B SaaS. Most recently I owned onboarding metrics at BrightCart where we cut time to value by twenty eight percent. Before that I worked in customer success which taught me how to translate user friction into product changes. I am excited about this role because it sits at the intersection of data and customer outcomes.",
-          },
-          { speaker: "Alex", text: "What was hardest about that work?" },
-          {
-            speaker: "Learner",
-            text:
-              "Getting engineering and support aligned on what activated meant. We ran a workshop, agreed on three events, and instrumented them the same week.",
-          },
-        ],
-      },
-    }),
+    body: JSON.stringify({ scenarioId: "scenario-002" }),
   });
-  console.log("complete", complete.status, (await complete.text()).slice(0, 500));
+  console.log("stub blocked", blocked.status, await blocked.text());
 }
 
 main().catch((e) => {

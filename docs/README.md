@@ -1,45 +1,43 @@
-# SpeakCoach MVP Docs
+# SpeakCoach Docs
 
-Latency-first MVP: **one scenario**, live **Sarvam** voice practice, transcript-backed scores.
+Product docs for SpeakCoach **v1** (multi-scenario catalog) built on the MVP vertical slice.
 
 ## Reading order
 
-1. [MVP scope](./mvp-scope.md)  
-2. [Product requirements](./product-requirements.md)  
-3. [User flows](./user-flows.md)  
-4. [Architecture](./architecture.md)  
-5. [Tech stack](./tech-stack.md) — **Node API + React** (decided)  
-6. [Sarvam integration](./sarvam-integration.md)  
-7. [Sarvam credentials](./sarvam-credentials.md) — keys, IDs, smoke-test recipe  
-8. [Latency strategy](./latency-strategy.md)  
-9. [Scenario 001](./scenario-001-interview-basics.md) — Alex Rivera interview  
-10. [Scoring rubric](./scoring-rubric.md)  
-11. [Data model](./data-model.md)  
-12. [API contracts](./api-contracts.md)  
-13. [UI screens](./ui-screens.md)  
-14. [Acceptance criteria](./acceptance-criteria.md)  
-15. [Roadmap](./roadmap.md)  
+1. [v1 scope](./v1-scope.md) — current product scope  
+2. [MVP scope](./mvp-scope.md) — historical single-scenario slice  
+3. [Architecture](./architecture.md)  
+4. [Tech stack](./tech-stack.md)  
+5. [Data model](./data-model.md) — Track / Scenario in Postgres  
+6. [API contracts](./api-contracts.md)  
+7. [UI screens](./ui-screens.md)  
+8. [Sarvam credentials](./sarvam-credentials.md) — secrets vs DB agent ids  
+8b. [Indus track agents](./indus-track-agents.md) — 1 agent/track + Sales create paste  
+9. [Sarvam integration](./sarvam-integration.md)  
+10. [Scenario 001](./scenario-001-interview-basics.md)  
+11. [Scoring rubric](./scoring-rubric.md)  
+12. [Latency strategy](./latency-strategy.md)  
+13. [Acceptance criteria](./acceptance-criteria.md)  
+14. [Roadmap](./roadmap.md)  
+15. [Deploy (single EC2)](./deploy.md) — `/var/www/frontend` + `/var/www/server`, nginx, systemd  
+
+Also update Key decisions table for scoring:
 
 ## Key decisions (locked)
 
 | Decision | Choice |
 |---|---|
-| AI provider | **Sarvam** Voice Agents (Samvaad) + Chat Completions for scoring |
-| Product backend | **Node.js (TypeScript)** — Fastify or Express |
+| AI provider | **Sarvam** Voice Agents; scoring via **Gemini** (or Sarvam chat) |
+| Deploy | Single EC2 + nginx — see [deploy.md](./deploy.md) |
+| Product backend | **Node.js (TypeScript)** Fastify |
 | Product frontend | **React + Vite + TypeScript** |
-| Live voice in product | Browser `sarvam-conv-ai-sdk` + **Node proxy** (never ship `SARVAM_API_KEY`) |
-| Local debug | Python scripts in `scripts/` only (`talk-to-agent.py`, `mic-check.py`) |
-| Scenario | `Alex-Rivera-26a1cc8d-9a78` — Interview Basics, English, voice Shubh |
-| Agent version pin | integer **`1`** (SDK field is `int`, not `"v1"`) |
+| Catalog | **Postgres** `tracks` + `scenarios` (seeded) |
+| Voice agents | **One agent per track** + scenario variables; optional scenario override |
+| Active tracks | **Interviews** + **Sales** |
+| Env secrets | Shared `SARVAM_API_KEY` only — agent ids in DB |
+| Live voice | Browser SDK + Node `/api/sarvam` proxy |
+| Docker | Postgres only |
 
-## Proven locally (2026-09-26)
+## Non-goals (v1)
 
-- Voice Agents key format: `sk_samvaad_…` (platform `sk_…` → **401 Invalid API key format**)  
-- Signed URL `GET …/apps/{app_id}/url` with `X-API-Key` → **200**  
-- Two-way English call + transcripts with:  
-  `python scripts/talk-to-agent.py --device 1 --gain 8`  
-- Quiet laptop array mic needs software **gain ~8**; confirm first with `mic-check.py`
-
-## Non-goals (MVP)
-
-No teams, Live Studio, Bixy, My Journey, analytics dashboards, multi-language UI, or 303-scenario catalog.
+No nested sub-scenarios, admin CMS UI, Bixy, My Journey, teams, Live Studio, or 303-scenario catalog.

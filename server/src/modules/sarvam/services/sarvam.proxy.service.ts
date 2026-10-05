@@ -1,8 +1,8 @@
-import { voiceConfig } from "../config/voice.config.js";
+import { voiceConfig, type ScenarioAgentConfig } from "../config/voice.config.js";
 import { AppError } from "../../../shared/http/errors.js";
 import { logger } from "../../../shared/logging/logger.js";
 
-/** Reverse-proxy helper: forward to Sarvam app-runtime with X-API-Key. */
+/** Reverse-proxy helper: forward to Sarvam app-runtime with server-side X-API-Key. */
 export const sarvamProxyService = {
   async forward(method: string, pathAndQuery: string, body?: Buffer | string | null) {
     const url = `${voiceConfig.runtimeBase}${pathAndQuery.startsWith("/") ? "" : "/"}${pathAndQuery}`;
@@ -14,10 +14,17 @@ export const sarvamProxyService = {
     }
     let response: Response;
     try {
+      const canSendBody = Boolean(body) && method !== "GET" && method !== "HEAD";
+      // Node fetch BodyInit accepts Uint8Array; Buffer is not always assignable under strict DOM types.
+      const fetchBody: BodyInit | undefined = !canSendBody
+        ? undefined
+        : typeof body === "string"
+          ? body
+          : new Uint8Array(body as Buffer);
       response = await fetch(url, {
         method,
         headers,
-        body: body && method !== "GET" && method !== "HEAD" ? body : undefined,
+        body: fetchBody,
       });
     } catch (err) {
       logger.error("Sarvam proxy network error", err);
@@ -31,12 +38,12 @@ export const sarvamProxyService = {
     };
   },
 
-  getClientConfig(proxyBaseUrl: string) {
+  getClientConfig(proxyBaseUrl: string, agent: ScenarioAgentConfig) {
     return {
-      orgId: voiceConfig.orgId,
-      workspaceId: voiceConfig.workspaceId,
-      appId: voiceConfig.appId,
-      version: voiceConfig.version,
+      orgId: agent.orgId,
+      workspaceId: agent.workspaceId,
+      appId: agent.appId,
+      version: agent.version,
       proxyBaseUrl,
     };
   },

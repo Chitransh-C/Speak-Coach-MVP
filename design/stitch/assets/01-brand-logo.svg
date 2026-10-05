@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 40" fill="none">
+  <!-- Brand icon: Speech aperture with resonance waves in deep ink and teal -->
+  <g transform="translate(4, 4)">
+    <circle cx="16" cy="16" r="15" fill="#0f766e" fill-opacity="0.12" stroke="#0f766e" stroke-width="1.5" />
+    <path d="M11 16C11 13.2386 13.2386 11 16 11C18.7614 11 21 13.2386 21 16C21 18.7614 18.7614 21 16 21V23" stroke="#0f766e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="16" cy="16" r="3" fill="#0f766e"/>
+    <path d="M23 10C24.8 11.6 26 13.7 26 16C26 18.3 24.8 20.4 23 22" stroke="#14b8a6" stroke-width="2" stroke-linecap="round"/>
+    <path d="M9 10C7.2 11.6 6 13.7 6 16C6 18.3 7.2 20.4 9 22" stroke="#d97706" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <!-- Wordmark: Speak (Ink #0c1f1a) + Coach (Teal #0f766e) -->
+  <text x="44" y="26" font-family="'Fraunces', serif" font-weight="700" font-size="20" fill="#0c1f1a" letter-spacing="-0.02em">Speak<tspan fill="#0f766e">Coach</tspan></text>
+</svg>

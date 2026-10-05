@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { api, HttpError } from "@/shared/api/client";
 import { useAuth } from "@/modules/auth/AuthContext";
+import { JourneyStepper } from "@/shared/ui/JourneyStepper";
 
 type Criterion = {
   id: string;
@@ -25,11 +26,15 @@ export function FeedbackPage() {
   const { sessionId = "" } = useParams();
   const { token } = useAuth();
   const [score, setScore] = useState<Score | null>(null);
+  const [scenarioId, setScenarioId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    api<{ score: Score | null }>(`/api/v1/sessions/${sessionId}`, { token })
+    api<{ score: Score | null; scenarioId: string }>(`/sessions/${sessionId}`, {
+      token,
+    })
       .then((res) => {
+        setScenarioId(res.scenarioId);
         if (!res.score) setError("Score not ready yet.");
         else setScore(res.score as Score);
       })
@@ -53,16 +58,13 @@ export function FeedbackPage() {
 
   return (
     <div className="stack-md">
-      <Link to="/" className="muted">
-        ← Home
+      <Link to="/reports" className="muted">
+        ← Reports
       </Link>
-      <h1>Coach feedback</h1>
-      <div className="steps">
-        <span className="step done">learn</span>
-        <span className="step done">watch</span>
-        <span className="step done">practice</span>
-        <span className="step active">feedback</span>
-      </div>
+      <h1 className="page-title" style={{ fontSize: "clamp(1.6rem, 3vw, 2.2rem)" }}>
+        Coach feedback
+      </h1>
+      <JourneyStepper active="feedback" />
 
       <section className="panel stack-md">
         <div className="score-hero">
@@ -72,6 +74,29 @@ export function FeedbackPage() {
           </span>
         </div>
         <p className="muted">{score.coachNotes}</p>
+
+        {score.metrics && (
+          <div className="metric-grid">
+            <div className="metric-card">
+              <div className="label">Talk / listen</div>
+              <div className="value" style={{ fontSize: "1.5rem" }}>
+                {Math.round(score.metrics.talkListenRatio * 100)}%
+              </div>
+            </div>
+            <div className="metric-card">
+              <div className="label">Questions</div>
+              <div className="value" style={{ fontSize: "1.5rem" }}>
+                {score.metrics.questionsAsked}
+              </div>
+            </div>
+            <div className="metric-card">
+              <div className="label">Fillers</div>
+              <div className="value" style={{ fontSize: "1.5rem" }}>
+                {score.metrics.fillerWordCount}
+              </div>
+            </div>
+          </div>
+        )}
 
         <div>
           <h2>Criteria</h2>
@@ -113,11 +138,16 @@ export function FeedbackPage() {
         </div>
 
         <div className="actions">
-          <Link className="btn btn-primary" to="/scenarios/scenario-001/practice">
-            Practice again
+          {scenarioId && (
+            <Link className="btn btn-primary" to={`/scenarios/${scenarioId}/setup`}>
+              Practice again
+            </Link>
+          )}
+          <Link className="btn btn-ghost" to="/reports">
+            All reports
           </Link>
           <Link className="btn btn-ghost" to="/">
-            Home
+            Practice
           </Link>
         </div>
       </section>

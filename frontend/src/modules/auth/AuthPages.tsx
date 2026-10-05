@@ -30,12 +30,9 @@ export function LoginPage() {
   return (
     <div className="hero-auth">
       <div>
-        <div className="brand-mark">
-          Speak<span style={{ color: "var(--teal)" }}>Coach</span>
-        </div>
-        <p className="lede">
-          Practice high-stakes conversations with live voice feedback — starting with Interview
-          Basics.
+        <img src="/brand/speakcoach-logo.svg" alt="SpeakCoach" style={{ height: 48 }} />
+        <p className="lede" style={{ marginTop: "1.25rem" }}>
+          Practice high-stakes conversations with live voice feedback — Interviews and Sales tracks.
         </p>
       </div>
       <form className="panel" onSubmit={onSubmit}>
@@ -105,10 +102,10 @@ export function SignupPage() {
   return (
     <div className="hero-auth">
       <div>
-        <div className="brand-mark">
-          Speak<span style={{ color: "var(--teal)" }}>Coach</span>
-        </div>
-        <p className="lede">Create your account and open your first interview practice scenario.</p>
+        <img src="/brand/speakcoach-logo.svg" alt="SpeakCoach" style={{ height: 48 }} />
+        <p className="lede" style={{ marginTop: "1.25rem" }}>
+          Create your account and open your first practice scenario.
+        </p>
       </div>
       <form className="panel" onSubmit={onSubmit}>
         <h2>Create account</h2>

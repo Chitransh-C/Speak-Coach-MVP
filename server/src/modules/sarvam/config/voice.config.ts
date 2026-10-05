@@ -1,11 +1,14 @@
 import { env } from "../../../shared/config/env.js";
 
+/** Shared Sarvam Voice Agents secrets — per-scenario agent ids come from DB. */
 export const voiceConfig = {
-  orgId: env.SARVAM_ORG_ID,
-  workspaceId: env.SARVAM_WORKSPACE_ID,
-  appId: env.SARVAM_APP_ID,
-  version: env.SARVAM_AGENT_VERSION,
-  apiKey: env.SARVAM_API_KEY,
+  apiKey: env.sarvamVoiceApiKey,
   runtimeBase: "https://apps.sarvam.ai/api/app-runtime",
-  chatKey: env.SARVAM_CHAT_API_KEY || env.SARVAM_API_KEY,
+};
+
+export type ScenarioAgentConfig = {
+  orgId: string;
+  workspaceId: string;
+  appId: string;
+  version: number;
 };

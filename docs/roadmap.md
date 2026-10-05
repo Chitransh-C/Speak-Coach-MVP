@@ -1,46 +1,37 @@
-# Roadmap (Post-MVP)
+# Roadmap
 
-Build only after MVP acceptance criteria pass and latency is stable.
+## Done — MVP
+Single scenario (`scenario-001`), Learn → Watch → Practice → Feedback, Sarvam proxy, scoring.
 
-## Phase 2 — Depth on the core loop
+## Done / in progress — v1 architecture
+- DB-backed tracks + scenarios
+- Practice setup (language / voice)
+- Per-scenario Sarvam agent ids in DB; env secrets only
+- Seed stubs; content fill later
 
-- Knowledge check after Learn  
-- Language / voice picker (small set, not 74)  
-- Better Watch (optional audio playback of model dialogue)  
-- Retry history list (last N sessions for scenario-001)  
-- Stronger insufficient-dialogue handling  
+## Next — Content fill
+- Commit Indus agents for stub scenarios; set `availability: live` + agent columns
+- Expand to ~6–10 scenarios across Interviews + Sales (and more tracks)
+- Wire Sales track agent after Indus create ([indus-track-agents.md](./indus-track-agents.md))
 
-## Phase 3 — Guidance & personalization
+## Later
 
-- Bixy (navigate + search within growing catalog)  
-- My Journey light: next-step recommendation for 3–5 scenarios  
-- Streaks / XP (simple counters)  
+### Depth
+- Knowledge check after Learn
+- Watch audio playback
+- Retry history list
+- Stronger insufficient-dialogue handling
 
-## Phase 4 — Content scale
+### Guidance
+- Bixy, My Journey light, streaks / XP
 
-- Expand to ~10 scenarios across Interviews + one other track  
-- Admin or markdown-based content pipeline  
-- Scenario filters (level, completion)  
+### Scale & creation
+- Admin/content pipeline UI
+- My Scenarios, document upload
+- Teams + leaderboard
 
-## Phase 5 — Creation & collaboration
-
-- My Scenarios (brief → Sarvam-generated scenario)  
-- Document upload → scenario  
-- Teams + join code + basic leaderboard  
-
-## Phase 6 — Studio & analytics
-
-- Live Studio formats (Prepared Talk, Instant Speak, JAM, PREP)  
-- Activity timeline + 7d/30d analytics  
-- Certificates  
-
-## Phase 7 — Account polish
-
-- Tokens / balance ledger  
-- Appearance modes  
-- Privacy controls + data deletion  
-- Optional body-language grading  
+### Studio & polish
+- Live Studio formats, analytics, certificates, tokens, privacy controls
 
 ## Rule
-
-Do not start Phase N+1 features while Phase N latency or scoring quality is failing demos.
+Do not expand content volume while latency or scoring quality is failing demos.

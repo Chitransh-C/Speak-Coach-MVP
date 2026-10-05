@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"on-tertiary-fixed":"#00201c","on-secondary-fixed":"#2f1500","inverse-on-surface":"#e0f6ed","surface-bright":"#e8fef6","error":"#ba1a1a","on-surface-variant":"#3e4947","surface-container-highest":"#d2e7df","on-primary-fixed":"#00201d","primary-fixed-dim":"#80d5cb","tertiary-fixed-dim":"#4fdbc8","tertiary-container":"#00776b","outline-variant":"#bdc9c6","primary-fixed":"#9cf2e8","outline":"#6e7977","on-surface":"#0c1f1a","secondary-fixed":"#ffdcc3","surface-container":"#ddf3ea","on-error":"#ffffff","on-primary-fixed-variant":"#00504a","surface":"#e8fef6","secondary":"#904d00","inverse-primary":"#80d5cb","surface-container-lowest":"#ffffff","on-background":"#0c1f1a","on-tertiary":"#ffffff","inverse-surface":"#21342e","tertiary":"#005c52","on-tertiary-container":"#84ffec","on-tertiary-fixed-variant":"#005048","error-container":"#ffdad6","surface-dim":"#c9dfd6","on-secondary-fixed-variant":"#6e3900","tertiary-fixed":"#71f8e4","surface-tint":"#006a63","on-primary":"#ffffff","on-secondary-container":"#663500","surface-container-low":"#e3f9f0","secondary-fixed-dim":"#ffb77d","surface-container-high":"#d7ede4","primary-container":"#0f766e","on-error-container":"#93000a","on-secondary":"#ffffff","background":"#e8fef6","secondary-container":"#fe932c","on-primary-container":"#a3faef","surface-variant":"#d2e7df","primary":"#005c55"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-sm":"0.5rem","gutter-mobile":"1rem","margin":"3rem","space-md":"1rem","space-lg":"1.5rem","gutter":"1.5rem","margin-mobile":"1.25rem","space-xs":"0.25rem","space-xl":"2.5rem"},"fontFamily":{"body-lg":["Manrope"],"body-sm":["Manrope"],"headline-xl":["Newsreader"],"headline-xl-mobile":["Newsreader"],"label-sm":["Manrope"],"headline-md":["Newsreader"],"label-lg":["Manrope"],"headline-lg":["Newsreader"],"headline-lg-mobile":["Newsreader"],"label-md":["Manrope"],"headline-sm":["Newsreader"],"body-md":["Manrope"]},"fontSize":{"body-lg":["18px",{"lineHeight":"28px","fontWeight":"400"}],"body-sm":["13px",{"lineHeight":"20px","fontWeight":"400"}],"headline-xl":["48px",{"lineHeight":"56px","letterSpacing":"-0.02em","fontWeight":"500"}],"headline-xl-mobile":["34px",{"lineHeight":"42px","letterSpacing":"-0.015em","fontWeight":"500"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"700"}],"headline-md":["26px",{"lineHeight":"34px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-lg":["14px",{"lineHeight":"20px","letterSpacing":"0.01em","fontWeight":"600"}],"headline-lg":["36px",{"lineHeight":"44px","letterSpacing":"-0.015em","fontWeight":"500"}],"headline-lg-mobile":["28px",{"lineHeight":"36px","letterSpacing":"-0.01em","fontWeight":"500"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}],"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"600"}],"body-md":["15px",{"lineHeight":"24px","fontWeight":"400"}]}}}}</script></head><body class="min-h-screen bg-surface-container-lowest text-on-surface font-body-md text-body-md antialiased relative overflow-x-hidden selection:bg-primary-fixed selection:text-on-primary-fixed"><div class="fixed inset-0 pointer-events-none z-0"><div class="absolute -top-48 -left-48 w-[640px] h-[640px] rounded-full bg-primary/5 blur-[120px]"></div><div class="absolute -bottom-48 -right-48 w-[640px] h-[640px] rounded-full bg-secondary-container/5 blur-[140px]"></div></div><header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(12,31,26,0.04)]"><div class="h-16 w-full max-w-[1280px] mx-auto px-gutter flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm"><img alt="SpeakCoach Brand Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1US39eXciCiYcZOetiyeigZAQkFIF3w2T8vixHX-vckn-DuWswxfvmP10LeoEV70I6icWI_LfTEUiGfZIoZHLmCJXD0-YnMJzBPDepO2AMOdu4fAJzT5fE-vy4rEdmGNQ3DzBt8o6Dnx5C5G8h7WeLLSyz3am42K7Lm9I0wCgMvpg8H462f_jpTBnfHzTzggwvHbDdMLFO1iWV8a4fDXdZujwDEyHAfX8bxOtGuw0fYh3lEG4sujH0pRrYd"/><span class="font-headline-sm text-headline-sm tracking-tight text-on-surface select-none">SpeakCoach</span></div><div class="h-5 w-[1px] bg-surface-container-highest"></div><nav class="flex items-center gap-space-xs" data-active-classes="bg-surface-container-high text-on-surface font-label-md"><a aria-current="page" class="px-space-md py-space-xs rounded-full transition-colors duration-150 bg-surface-container-high text-on-surface font-label-md" data-path="practice" href="#">Practice</a><a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150" data-path="reports" href="#">Reports</a><a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150" data-path="journey" href="#">Journey</a><a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150" data-path="live-studio" href="#">Live Studio</a><a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150" data-path="teams" href="#">Teams</a></nav></div><div class="flex items-center gap-space-sm"><div class="hidden xl:flex items-center gap-space-xs bg-surface-container-low px-space-md py-1 rounded-full shadow-[inset_0_1px_2px_rgba(12,31,26,0.04)]"><span class="text-label-md font-label-md select-none">🔥</span><span class="font-label-md text-label-md text-on-surface tracking-wide">4 days</span></div><div class="hidden lg:flex items-center gap-space-xs bg-surface-container-low px-space-md py-1 rounded-full shadow-[inset_0_1px_2px_rgba(12,31,26,0.04)]"><span class="text-label-md font-label-md text-primary select-none">⚡</span><span class="font-label-md text-label-md text-on-surface tracking-wide">1,240 XP <span class="text-on-surface-variant font-normal">· Lvl 3</span></span></div><div class="flex items-center gap-space-xs bg-surface-container-low px-space-md py-1 rounded-full shadow-[inset_0_1px_2px_rgba(12,31,26,0.04)]"><span class="text-label-md font-label-md select-none">🪙</span><span class="font-label-md text-label-md text-on-surface tracking-wide">14 sessions</span></div><div class="h-5 w-[1px] bg-surface-container-highest mx-space-xs hidden sm:block"></div><button class="flex items-center gap-space-sm pl-space-xs pr-space-sm py-1 rounded-full hover:bg-surface-container-low transition-colors duration-150 text-left cursor-pointer"><div class="relative flex items-center justify-center"><img alt="Profile" class="w-8 h-8 rounded-full object-cover shadow-[0_2px_6px_rgba(12,31,26,0.08)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCG-Vcs1ZhcV8nij2QcF1fkEkQ65zrGb96X8gTCyjIfJP68g0gxr4L3dX2wPpQVQ2wTHjlsPvLH-wqNuJHIeKx83LU_1AkndA27ARb1U2o6u9tL8H33rVrZaNESGPqRiYxdwX3a_DnsyqIux8WVpFI1DXACgtRd6xeoQHADLTKBWhsx5gbR1wB9sp14ZN3UVqHUxpDC3kD3GaJ2K8TYHSyd_6I__QKLMeQEIBFOZy8H1IWRa3brqzzLGA"/><span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-primary ring-2 ring-surface-container-lowest"></span></div><div class="hidden md:flex flex-col"><span class="font-label-md text-label-md text-on-surface leading-tight">Asha Patel</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-none">Founder Track</span></div><span class="material-symbols-outlined text-on-surface-variant text-[18px]">expand_more</span></button></div></div></header><main class="relative z-10 w-full pt-16 min-h-[calc(100vh-5rem)]"><div class="w-full max-w-[1280px] mx-auto px-gutter py-space-xl"><div class="flex flex-col w-full space-y-space-xl">
+<!-- Header Section with Atmospheric Accents -->
+<div class="relative w-full rounded-2xl bg-surface-container-low p-space-xl overflow-hidden shadow-sm">
+<div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-primary/5 blur-3xl pointer-events-none"></div>
+<div class="absolute right-48 -bottom-20 w-64 h-64 rounded-full bg-secondary-container/10 blur-3xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col lg:flex-row lg:items-end justify-between gap-space-lg">
+<div class="max-w-3xl space-y-space-sm">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-highest/80 backdrop-blur-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-sm text-label-sm tracking-wider uppercase text-primary font-semibold">Catalog</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Practice by track</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
+          Master high-stakes communications with real-time AI roleplay partners, scripted model walkthroughs, and objective scoring.
+        </p>
+</div>
+<div class="flex items-center gap-space-sm shrink-0">
+<button class="group inline-flex items-center gap-2 px-space-lg py-3 rounded-full bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-lg text-label-lg transition-all duration-200 shadow-[0_4px_16px_rgba(12,31,26,0.06)] hover:shadow-md active:scale-95 cursor-pointer">
+<span class="material-symbols-outlined text-primary text-[20px] transition-transform duration-200 group-hover:rotate-90">add</span>
+<span>Create Custom Scenario</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Filter & Search Toolbar -->
+<div class="w-full flex flex-col md:flex-row items-stretch md:items-center justify-between gap-space-md pb-2">
+<!-- Category Filter Pills -->
+<div class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 scrollbar-none" id="track-filters">
+<button class="px-space-md py-2 rounded-full font-label-md text-label-md bg-on-surface text-surface-container-lowest shadow-sm hover:opacity-95 transition-all cursor-pointer whitespace-nowrap" data-track="all">
+        All Tracks <span class="opacity-70 ml-1">12</span>
+</button>
+<button class="px-space-md py-2 rounded-full font-label-md text-label-md bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-all cursor-pointer whitespace-nowrap" data-track="interviews">
+        Interviews <span class="text-on-surface-variant/70 ml-1">6</span>
+</button>
+<button class="px-space-md py-2 rounded-full font-label-md text-label-md bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-all cursor-pointer whitespace-nowrap" data-track="sales">
+        Sales &amp; Negotiation <span class="text-on-surface-variant/70 ml-1">4</span>
+</button>
+<button class="px-space-md py-2 rounded-full font-label-md text-label-md bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-all cursor-pointer whitespace-nowrap" data-track="executive">
+        Executive Presence <span class="text-on-surface-variant/70 ml-1">2</span>
+</button>
+</div>
+<!-- Search and Difficulty -->
+<div class="flex items-center gap-space-sm shrink-0">
+<div class="relative flex-1 md:w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/60 text-[18px]">search</span>
+<input class="w-full pl-9 pr-3 py-2 bg-surface-container-low rounded-xl text-on-surface font-body-sm text-body-sm placeholder:text-on-surface-variant/50 focus:bg-surface-container-lowest focus:outline-none transition-all shadow-[inset_0_1px_2px_rgba(12,31,26,0.03)]" id="search-input" placeholder="Filter scenarios..." type="text"/>
+</div>
+<div class="relative">
+<select class="appearance-none pl-3 pr-8 py-2 bg-surface-container-low rounded-xl text-on-surface font-label-md text-label-md focus:bg-surface-container-lowest focus:outline-none transition-all cursor-pointer shadow-[inset_0_1px_2px_rgba(12,31,26,0.03)]" id="difficulty-filter">
+<option value="all">All Levels</option>
+<option value="foundation">Foundation</option>
+<option value="intermediate">Intermediate</option>
+<option value="advanced">Advanced</option>
+<option value="mastery">Mastery</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Scenario Grid (3 Columns) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg w-full" id="scenario-grid">
+<!-- Card 1: Interview Basics -->
+<div class="group relative flex flex-col justify-between rounded-2xl bg-surface-container-lowest p-space-lg shadow-[0_18px_50px_rgba(12,31,26,0.06)] hover:shadow-[0_22px_60px_rgba(12,31,26,0.1)] transition-all duration-300 hover:-translate-y-1" data-level="foundation" data-track-category="interviews">
+<div class="space-y-space-md">
+<!-- Badge & Metadata Header -->
+<div class="flex items-center justify-between gap-2">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm uppercase tracking-wider font-semibold">Interviews</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant/80">· Foundation</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1 shrink-0">
+<span class="material-symbols-outlined text-[14px]">timer</span> 8-10 min
+          </span>
+</div>
+<!-- Title & Description -->
+<div class="space-y-1.5">
+<h2 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">
+            Interview Basics: “Tell Me About Yourself”
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed line-clamp-3">
+            Practice your executive summary and framing with hiring manager Alex Rivera. Craft a concise 90-second narrative highlighting trajectory and impact.
+          </p>
+</div>
+<!-- Roleplay Partner Inset -->
+<div class="p-3 rounded-xl bg-surface-container-low flex items-center gap-3">
+<img class="w-10 h-10 rounded-full object-cover shrink-0 shadow-sm" data-alt="Editorial close-up corporate portrait of Alex Rivera, VP of Engineering, calm and analytical expression, natural studio lighting, soft green and neutral background tones, clean minimal aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtHcGGz5Whdl_ojJIam3osTBI_eGwfXNlAXENIjltEmvOP3sDTlY7nfLD5PCstAeQLht-G21TWjdCG5MkxIRDBJv2KDxTRGiiEbP9AW8-yfDt_Zfh7vF4qZIvoF5FyZ0B6Mds1jAltleyy94et94mRd81ylL59TkbduJqpKinxiwdFOgLH5m60uKeZB2gNtWBInUBOtVhmb0KfNqfULOD5aS0MXzdOAyzUZl8cC8zVrLrJbqpt9_S7mA"/>
+<div class="min-w-0">
+<div class="font-label-md text-label-md text-on-surface font-semibold truncate">Alex Rivera</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant text-[11px] truncate">VP Engineering (Calm, Evaluative)</div>
+</div>
+</div>
+</div>
+<!-- Footer & Action -->
+<div class="pt-space-md mt-space-md space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-primary text-[15px]">check_circle</span>
+<span>Last Score: <strong class="text-on-surface">78</strong> · Passed</span>
+</div>
+<div class="text-on-surface-variant font-label-sm text-label-sm">3 attempts</div>
+</div>
+<button class="w-full py-2.5 px-4 rounded-full bg-primary hover:bg-primary/90 text-on-primary font-label-lg text-label-lg transition-all duration-150 flex items-center justify-center gap-2 active:scale-98 shadow-sm cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">replay</span>
+<span>Practice Again</span>
+</button>
+</div>
+</div>
+<!-- Card 2: Why This Company? -->
+<div class="group relative flex flex-col justify-between rounded-2xl bg-surface-container-lowest p-space-lg shadow-[0_18px_50px_rgba(12,31,26,0.06)] hover:shadow-[0_22px_60px_rgba(12,31,26,0.1)] transition-all duration-300 hover:-translate-y-1" data-level="intermediate" data-track-category="interviews">
+<div class="space-y-space-md">
+<!-- Badge & Metadata Header -->
+<div class="flex items-center justify-between gap-2">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm uppercase tracking-wider font-semibold">Interviews</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant/80">· Intermediate</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1 shrink-0">
+<span class="material-symbols-outlined text-[14px]">timer</span> 12 min
+          </span>
+</div>
+<!-- Title & Description -->
+<div class="space-y-1.5">
+<h2 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">
+            Why This Company &amp; Strategic Vision
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed line-clamp-3">
+            Demonstrate deep company research, strategic curiosity, and role alignment without sounding generic or scripted.
+          </p>
+</div>
+<!-- Roleplay Partner Inset -->
+<div class="p-3 rounded-xl bg-surface-container-low flex items-center gap-3">
+<img class="w-10 h-10 rounded-full object-cover shrink-0 shadow-sm" data-alt="Modern candid headshot of a direct and decisive VP executive in professional attire, subtle architectural background, warm diffused daylight, poised posture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAMCGKm72oZLdqxT3iElKCSKJR4kxmhZiLPA5KUJFuapUVd673FyDCitHJvQgnM0Oik-JN8SSGebGzkaYJOFn0dr1pTZMuIaNR0uJ0IPJfn6qlZoJITTK44haR0y_43piaGoM77CT_sgUmmsW_uSOfdHguQFREceJW1yaajqIkf6NRQ7O6VAXg1J_UtP8KE0J9dSAdsjlX_IyA53sKCL-yPmC3TsSAH69E3kOep16I4s-maBJ1mGucAw"/>
+<div class="min-w-0">
+<div class="font-label-md text-label-md text-on-surface font-semibold truncate">Alex Rivera</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant text-[11px] truncate">VP Engineering (Direct, High-Bar)</div>
+</div>
+</div>
+</div>
+<!-- Footer & Action -->
+<div class="pt-space-md mt-space-md space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-highest/60 text-on-surface-variant font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span>Live Interactive</span>
+</div>
+<span class="text-on-surface-variant font-label-sm text-label-sm">Unattempted</span>
+</div>
+<button class="w-full py-2.5 px-4 rounded-full bg-primary hover:bg-primary/90 text-on-primary font-label-lg text-label-lg transition-all duration-150 flex items-center justify-center gap-2 active:scale-98 shadow-sm cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">play_arrow</span>
+<span>Start Scenario</span>
+</button>
+</div>
+</div>
+<!-- Card 3: Sales Discovery -->
+<div class="group relative flex flex-col justify-between rounded-2xl bg-surface-container-lowest p-space-lg shadow-[0_18px_50px_rgba(12,31,26,0.06)] hover:shadow-[0_22px_60px_rgba(12,31,26,0.1)] transition-all duration-300 hover:-translate-y-1" data-level="advanced" data-track-category="sales">
+<div class="space-y-space-md">
+<!-- Badge & Metadata Header -->
+<div class="flex items-center justify-between gap-2">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-container/20 text-secondary font-label-sm text-label-sm uppercase tracking-wider font-semibold">Sales</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant/80">· Advanced</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1 shrink-0">
+<span class="material-symbols-outlined text-[14px]">timer</span> 15 min
+          </span>
+</div>
+<!-- Title & Description -->
+<div class="space-y-1.5">
+<h2 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-secondary transition-colors">
+            Sales Discovery: Uncover the Pain
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed line-clamp-3">
+            Uncover mission-critical pain points and budget authority with a skeptical, time-poor VP of Procurement before pitching solutions.
+          </p>
+</div>
+<!-- Roleplay Partner Inset -->
+<div class="p-3 rounded-xl bg-surface-container-low flex items-center gap-3">
+<img class="w-10 h-10 rounded-full object-cover shrink-0 shadow-sm" data-alt="Realistic editorial portrait of Jordan Blake, VP of Procurement, sharp focused gaze, skeptical expression, dark minimalist blazer, crisp office interior bokeh in background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqUtBKvIlac0n4quznNod49invN3neYyW8hjLBoLv3NPwkRrDm4XzxlYy5KiKCpqsWV1mZdCBPMt1_ANswyHaYxIth6GgqOu3lHae_6SLEfHNcq_iXrmOas0n61nJcigd1Zz_NzAB5JtHfMIuh5cDFmQ6wY3Unn_a_B2i3NG4b40Pckk8quJejIL-t_IvjQhXc6vKxBTiOR-gcxQbCklwSPBKMN1tBz2ReQcdWwAraMrzLBH0XH06HYA"/>
+<div class="min-w-0">
+<div class="font-label-md text-label-md text-on-surface font-semibold truncate">Jordan Blake</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant text-[11px] truncate">VP Procurement (Time-poor, Skeptical)</div>
+</div>
+</div>
+</div>
+<!-- Footer & Action -->
+<div class="pt-space-md mt-space-md space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-fixed/50 text-on-secondary-fixed-variant font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
+<span>New · Untrained</span>
+</div>
+<span class="text-on-surface-variant font-label-sm text-label-sm">High Intensity</span>
+</div>
+<button class="w-full py-2.5 px-4 rounded-full bg-secondary-container hover:bg-secondary text-surface-container-lowest font-label-lg text-label-lg transition-all duration-150 flex items-center justify-center gap-2 active:scale-98 shadow-sm cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">play_arrow</span>
+<span>Start Scenario</span>
+</button>
+</div>
+</div>
+<!-- Card 4: Handling Objections & Critical Pushback -->
+<div class="group relative flex flex-col justify-between rounded-2xl bg-surface-container-lowest p-space-lg shadow-[0_18px_50px_rgba(12,31,26,0.06)] hover:shadow-[0_22px_60px_rgba(12,31,26,0.1)] transition-all duration-300 hover:-translate-y-1" data-level="mastery" data-track-category="interviews">
+<div class="space-y-space-md">
+<!-- Badge & Metadata Header -->
+<div class="flex items-center justify-between gap-2">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm uppercase tracking-wider font-semibold">Interviews</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant/80">· Mastery</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1 shrink-0">
+<span class="material-symbols-outlined text-[14px]">timer</span> 15 min
+          </span>
+</div>
+<!-- Title & Description -->
+<div class="space-y-1.5">
+<h2 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">
+            Handling Objections &amp; Critical Pushback
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed line-clamp-3">
+            Stay composed when interviewers challenge your project timeline failures or architectural decisions with rigorous scrutiny.
+          </p>
+</div>
+<!-- Roleplay Partner Inset -->
+<div class="p-3 rounded-xl bg-surface-container-low flex items-center gap-3">
+<img class="w-10 h-10 rounded-full object-cover shrink-0 shadow-sm" data-alt="Sophisticated portrait of Devon Vance, Managing Director, seasoned mature executive with silver-streaked hair, sharp thoughtful posture, neutral corporate office background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmeuwLgoOD3wv8U4sm6CUTAno2cjM5OKTqQTTG3_nVPvOZM-fHXaFfJzap7zMD6Xdehe8ipuyaiIekgEY6jEpOvdlq6qXDPMLLBHkhPW1FjfVkYh9Z0Voym6TBy0y60SnnNfGmlhZ161RaLYw4tgdtbwllIr18BmWOf1RnAOtCc0YNnpQ_12NuvfXLd-tqYqJkMsu3y4TXqnGH0Rd6pNoN99OmLW2hphGVRt0sOem-RUzZyjt-BFjunw"/>
+<div class="min-w-0">
+<div class="font-label-md text-label-md text-on-surface font-semibold truncate">Devon Vance</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant text-[11px] truncate">Managing Director (Analytical, Stern)</div>
+</div>
+</div>
+</div>
+<!-- Footer & Action -->
+<div class="pt-space-md mt-space-md space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span>Live Interactive</span>
+</div>
+<span class="text-on-surface-variant font-label-sm text-label-sm">Audio &amp; Vision</span>
+</div>
+<button class="w-full py-2.5 px-4 rounded-full bg-primary hover:bg-primary/90 text-on-primary font-label-lg text-label-lg transition-all duration-150 flex items-center justify-center gap-2 active:scale-98 shadow-sm cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">play_arrow</span>
+<span>Start Scenario</span>
+</button>
+</div>
+</div>
+<!-- Card 5: Enterprise Contract Negotiation (Coming Soon) -->
+<div class="group relative flex flex-col justify-between rounded-2xl bg-surface-container-low/60 p-space-lg shadow-none opacity-80 hover:opacity-100 transition-all duration-200" data-level="advanced" data-track-category="sales">
+<div class="space-y-space-md">
+<!-- Badge & Metadata Header -->
+<div class="flex items-center justify-between gap-2">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider font-semibold">Sales</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant/80">· Enterprise</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1 shrink-0">
+<span class="material-symbols-outlined text-[14px]">timer</span> 20 min
+          </span>
+</div>
+<!-- Title & Description -->
+<div class="space-y-1.5">
+<h2 class="font-headline-sm text-headline-sm text-on-surface/90">
+            Enterprise Contract Negotiation
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant/80 leading-relaxed line-clamp-3">
+            Navigate redlines, multi-year discount pushback, and procurement legal clauses without forfeiting company gross margins.
+          </p>
+</div>
+<!-- Roleplay Partner Inset placeholder -->
+<div class="p-3 rounded-xl bg-surface-container flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">person_outline</span>
+</div>
+<div class="min-w-0">
+<div class="font-label-md text-label-md text-on-surface/80 font-medium truncate">Legal Counsel &amp; Procurement</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant/70 text-[11px] truncate">Dual-Agent Roleplay Matrix</div>
+</div>
+</div>
+</div>
+<!-- Footer & Action (Disabled / Lock) -->
+<div class="pt-space-md mt-space-md space-y-space-sm">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm">
+            Coming Soon
+          </span>
+<span class="text-on-surface-variant/70 font-label-sm text-label-sm">Q4 Series</span>
+</div>
+<button class="w-full py-2.5 px-4 rounded-full bg-surface-container text-on-surface-variant/60 font-label-lg text-label-lg flex items-center justify-center gap-2 cursor-not-allowed select-none" disabled="">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+<span>Available Dec 14</span>
+</button>
+</div>
+</div>
+<!-- Card 6: All-Hands Crisis Communication (Coming Soon) -->
+<div class="group relative flex flex-col justify-between rounded-2xl bg-surface-container-low/60 p-space-lg shadow-none opacity-80 hover:opacity-100 transition-all duration-200" data-level="foundation" data-track-category="executive">
+<div class="space-y-space-md">
+<!-- Badge & Metadata Header -->
+<div class="flex items-center justify-between gap-2">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider font-semibold">Executive</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant/80">· All Levels</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1 shrink-0">
+<span class="material-symbols-outlined text-[14px]">timer</span> 10 min
+          </span>
+</div>
+<!-- Title & Description -->
+<div class="space-y-1.5">
+<h2 class="font-headline-sm text-headline-sm text-on-surface/90">
+            All-Hands Crisis Communication
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant/80 leading-relaxed line-clamp-3">
+            Communicate reorganization, budget restructuring, and sudden market shifts to team leads with empathetic transparency.
+          </p>
+</div>
+<!-- Roleplay Partner Inset placeholder -->
+<div class="p-3 rounded-xl bg-surface-container flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">groups</span>
+</div>
+<div class="min-w-0">
+<div class="font-label-md text-label-md text-on-surface/80 font-medium truncate">Simulated Audience Audience</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant/70 text-[11px] truncate">120 AI-Simulated Attendants</div>
+</div>
+</div>
+</div>
+<!-- Footer & Action (Disabled / Notification) -->
+<div class="pt-space-md mt-space-md space-y-space-sm">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm">
+            Coming Soon
+          </span>
+<span class="text-on-surface-variant/70 font-label-sm text-label-sm">Early Access</span>
+</div>
+<button class="w-full py-2.5 px-4 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant font-label-lg text-label-lg transition-colors flex items-center justify-center gap-2 cursor-pointer active:scale-98">
+<span class="material-symbols-outlined text-[18px]">notifications</span>
+<span>Notify Me</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Bottom Helper Banner -->
+<div class="relative w-full rounded-2xl bg-surface-container-low p-space-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[24px]">auto_stories</span>
+</div>
+<div>
+<p class="font-body-md text-body-md text-on-surface font-semibold">Want to practice your own company brief?</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Upload job specs, pitch memos, or meeting notes to create a personalized AI scenario in 60 seconds.
+        </p>
+</div>
+</div>
+<a class="inline-flex items-center gap-1.5 font-label-lg text-label-lg text-primary hover:text-primary-container font-semibold transition-colors duration-150 shrink-0 group" href="#">
+<span>Build custom scenario</span>
+<span class="material-symbols-outlined text-[18px] transition-transform duration-200 group-hover:translate-x-1">arrow_forward</span>
+</a>
+</div>
+</div>
+<script>
+  (function initPracticeCatalog() {
+    const filterButtons = document.querySelectorAll('#track-filters button');
+    const searchInput = document.getElementById('search-input');
+    const difficultyFilter = document.getElementById('difficulty-filter');
+    const cards = document.querySelectorAll('#scenario-grid > div');
+
+    let currentTrack = 'all';
+    let currentQuery = '';
+    let currentDifficulty = 'all';
+
+    function applyFilters() {
+      cards.forEach(card => {
+        const track = card.getAttribute('data-track-category') || '';
+        const level = card.getAttribute('data-level') || '';
+        const text = card.textContent.toLowerCase();
+
+        const matchesTrack = (currentTrack === 'all') || (track === currentTrack);
+        const matchesLevel = (currentDifficulty === 'all') || (level === currentDifficulty);
+        const matchesQuery = !currentQuery || text.includes(currentQuery);
+
+        if (matchesTrack && matchesLevel && matchesQuery) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(b => {
+          b.className = 'px-space-md py-2 rounded-full font-label-md text-label-md bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-all cursor-pointer whitespace-nowrap';
+        });
+        btn.className = 'px-space-md py-2 rounded-full font-label-md text-label-md bg-on-surface text-surface-container-lowest shadow-sm hover:opacity-95 transition-all cursor-pointer whitespace-nowrap';
+        currentTrack = btn.getAttribute('data-track');
+        applyFilters();
+      });
+    });
+
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        currentQuery = e.target.value.toLowerCase().trim();
+        applyFilters();
+      });
+    }
+
+    if (difficultyFilter) {
+      difficultyFilter.addEventListener('change', (e) => {
+        currentDifficulty = e.target.value;
+        applyFilters();
+      });
+    }
+  })();
+</script></div></main><aside class="fixed bottom-6 right-6 z-40"><button class="group flex items-center gap-space-sm pl-space-md pr-space-lg py-2.5 bg-surface-container-lowest/95 backdrop-blur-md rounded-full shadow-[0_12px_32px_rgba(12,31,26,0.12)] hover:shadow-[0_16px_40px_rgba(12,31,26,0.16)] transition-all duration-200 cursor-pointer active:scale-95"><div class="w-7 h-7 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-md text-label-md shadow-sm">B</div><div class="flex flex-col text-left"><span class="font-label-sm text-label-sm text-primary uppercase tracking-wider">Bixy Coach</span><span class="font-label-md text-label-md text-on-surface">Need feedback on your pitch? <span class="text-primary-container font-semibold">Ask Bixy ✦</span></span></div></button></aside><footer class="w-full bg-surface-container-low py-space-xl"><div class="max-w-[1280px] mx-auto px-gutter flex flex-col sm:flex-row items-center justify-between gap-space-md text-on-surface-variant"><div class="flex items-center gap-space-sm"><span class="font-headline-sm text-headline-sm text-on-surface">SpeakCoach</span><span class="font-body-sm text-body-sm text-on-surface-variant">— Sanctioned vocal preparation for leaders.</span></div><div class="flex items-center gap-space-lg font-label-md text-label-md"><a class="text-on-surface-variant hover:text-on-surface transition-colors duration-150" href="#">Protocol Playbook</a><a class="text-on-surface-variant hover:text-on-surface transition-colors duration-150" href="#">Privacy Architecture</a><a class="text-on-surface-variant hover:text-on-surface transition-colors duration-150" href="#">Support Terminal</a></div></div></footer></body></html>

@@ -3,9 +3,15 @@ import { AppError } from "../../../shared/http/errors.js";
 import { scenariosService } from "../services/scenarios.service.js";
 
 export const scenariosController = {
+  async listTracks(request: FastifyRequest, reply: FastifyReply) {
+    if (!request.user) throw new AppError(401, "UNAUTHORIZED", "Missing user");
+    return reply.send(await scenariosService.listTracks());
+  },
+
   async list(request: FastifyRequest, reply: FastifyReply) {
     if (!request.user) throw new AppError(401, "UNAUTHORIZED", "Missing user");
-    return reply.send(await scenariosService.listForUser(request.user.id));
+    const { trackId } = request.query as { trackId?: string };
+    return reply.send(await scenariosService.listForUser(request.user.id, trackId));
   },
 
   async get(request: FastifyRequest, reply: FastifyReply) {

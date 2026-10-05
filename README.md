@@ -1,8 +1,8 @@
 # SpeakCoach
 
-AI communication practice: **Learn → Watch → Practice → Feedback**.
+AI communication practice: **Learn → Watch → Setup → Practice → Feedback**.
 
-MVP ships one scenario — **Interview Basics** with Alex Rivera — using Sarvam Voice Agents for live voice and post-call scoring.
+**v1** is a multi-track catalog (DB-backed scenarios) with language/voice setup. **One Sarvam Voice Agent per track**; scenarios inject content via agent variables. Active tracks: **Interviews** (Alex Rivera agent live) and **Sales** (create agent in Indus — see [docs/indus-track-agents.md](docs/indus-track-agents.md)).
 
 **Important:** Docker is used **only as the Postgres provider**. The API and frontend run natively on your machine with Node. There are no app Dockerfiles.
 
@@ -93,7 +93,7 @@ cd server
 cp .env.example .env
 ```
 
-Edit `server/.env` and fill every required value:
+Edit `server/.env` — **secrets and infra only** (no per-scenario agent ids):
 
 ```env
 DATABASE_URL="postgresql://speakcoach:speakcoach@localhost:5432/speakcoach?schema=public"
@@ -101,35 +101,18 @@ JWT_SECRET="change-me-in-production"
 PORT=3001
 CORS_ORIGIN="http://localhost:5173"
 
-# Voice Agents (apps.sarvam.ai) — MUST start with sk_samvaad_
+# Shared Voice Agents secret — must be sk_samvaad_…
 SARVAM_API_KEY=sk_samvaad_...
-SARVAM_ORG_ID=...
-SARVAM_WORKSPACE_ID=...
-SARVAM_APP_ID=Alex-Rivera-26a1cc8d-9a78
-SARVAM_AGENT_VERSION=1
 
-# Optional: platform chat key if scoring fails with the Voice Agents key
+# Optional: platform key for chat scoring
 SARVAM_CHAT_API_KEY=
 ```
 
-If you already have a root `.env` from earlier Sarvam setup, copy these into `server/.env`:
+Track-level Sarvam `orgId` / `workspaceId` / `appId` / `version` live on the **`tracks` table** (seeded). Scenarios may optionally override. Secrets stay in env only.
 
-- `SARVAM_API_KEY`
-- `SARVAM_ORG_ID`
-- `SARVAM_WORKSPACE_ID`
-- `SARVAM_APP_ID`
-- `SARVAM_AGENT_VERSION` (use integer `1`)
+If you already have a root `.env` from earlier setup, copy only `SARVAM_API_KEY` into `server/.env`.
 
-**Where to get Sarvam values**
-
-1. Open [Indus / Voice Agents](https://indus.sarvam.ai/samvaad) → your **Alex Rivera** agent.
-2. Open **Deploy with Code** on that agent (not a global Deploy landing page).
-3. Copy `org_id`, `workspace_id`, `app_id` from the SDK snippet.
-4. Generate a **Voice Agents** API key → must be `sk_samvaad_…`.  
-   Platform dashboard keys (`sk_…` without `samvaad`) return **401 Invalid API key format** on `apps.sarvam.ai`.
-5. Commit a version in Indus and pin `SARVAM_AGENT_VERSION=1`.
-
-More detail: [docs/sarvam-credentials.md](docs/sarvam-credentials.md).
+More detail: [docs/sarvam-credentials.md](docs/sarvam-credentials.md) · [docs/indus-track-agents.md](docs/indus-track-agents.md).
 
 Never commit `.env` files (they are gitignored).
 
@@ -162,6 +145,7 @@ cd server
 npm install
 npx prisma generate
 npx prisma db push
+npm run db:seed          # tracks + scenario-001 (live) + stubs
 npm run dev
 ```
 
@@ -176,6 +160,7 @@ Useful scripts:
 |---|---|
 | `npm run dev` | API with watch reload |
 | `npx prisma db push` | Sync Prisma schema to Postgres |
+| `npm run db:seed` | Upsert tracks + scenarios |
 | `npx prisma generate` | Regenerate Prisma client |
 | `npm run build` / `npm start` | Production build + run |
 
@@ -204,16 +189,12 @@ Open that URL in **Chrome**.
 ## 6. Use the product (end-to-end)
 
 1. **Sign up** (or Sign in) with email + password (min 8 characters).
-2. On **Home**, open **Interview Basics**.
-3. **Learn** → read the brief → **Continue to Watch**.
-4. **Watch** → read the model dialogue → **I’m ready — Practice**.
-5. **Practice**
-   - Click **Start call** and allow the microphone.
-   - Prefer a headset. Laptop array mics are often too quiet (calls may drop in ~10–15s).
-   - When finished, click **End & score** (do not only hang up mentally — this button saves the transcript and scores it).
-6. **Feedback** opens automatically at `/sessions/<id>/feedback` with overall score, pass/fail (≥70), criteria, strengths, and improvements.
+2. On **Home**, filter by track and open a **live** scenario (stubs show Coming soon).
+3. **Learn** → **Watch** → **Setup** (language + voice) → **Practice**.
+4. Click **Start call**, allow the microphone, then **End & score**.
+5. **Feedback** opens at `/sessions/<id>/feedback`.
 
-The step pills (learn / watch / practice / feedback) are progress markers. Feedback is shown after **End & score**, not by clicking the pill alone.
+Prefer a headset. Laptop array mics are often too quiet.
 
 ---
 
@@ -293,10 +274,11 @@ node scripts/smoke-api.mjs
 Start here for product detail:
 
 1. [docs/README.md](docs/README.md) — reading order  
-2. [docs/mvp-scope.md](docs/mvp-scope.md)  
-3. [docs/sarvam-credentials.md](docs/sarvam-credentials.md)  
-4. [docs/acceptance-criteria.md](docs/acceptance-criteria.md)  
-5. [docs/architecture.md](docs/architecture.md) · [docs/tech-stack.md](docs/tech-stack.md)
+2. [docs/v1-scope.md](docs/v1-scope.md)  
+3. [docs/indus-track-agents.md](docs/indus-track-agents.md) — track agents + Sales create  
+4. [docs/sarvam-credentials.md](docs/sarvam-credentials.md)  
+5. [docs/acceptance-criteria.md](docs/acceptance-criteria.md)  
+6. [docs/architecture.md](docs/architecture.md) · [docs/tech-stack.md](docs/tech-stack.md)
 
 ---
 

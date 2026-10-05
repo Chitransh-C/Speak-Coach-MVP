@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"on-tertiary-fixed":"#00201c","on-secondary-fixed":"#2f1500","inverse-on-surface":"#e0f6ed","surface-bright":"#e8fef6","error":"#ba1a1a","on-surface-variant":"#3e4947","surface-container-highest":"#d2e7df","on-primary-fixed":"#00201d","primary-fixed-dim":"#80d5cb","tertiary-fixed-dim":"#4fdbc8","tertiary-container":"#00776b","outline-variant":"#bdc9c6","primary-fixed":"#9cf2e8","outline":"#6e7977","on-surface":"#0c1f1a","secondary-fixed":"#ffdcc3","surface-container":"#ddf3ea","on-error":"#ffffff","on-primary-fixed-variant":"#00504a","surface":"#e8fef6","secondary":"#904d00","inverse-primary":"#80d5cb","surface-container-lowest":"#ffffff","on-background":"#0c1f1a","on-tertiary":"#ffffff","inverse-surface":"#21342e","tertiary":"#005c52","on-tertiary-container":"#84ffec","on-tertiary-fixed-variant":"#005048","error-container":"#ffdad6","surface-dim":"#c9dfd6","on-secondary-fixed-variant":"#6e3900","tertiary-fixed":"#71f8e4","surface-tint":"#006a63","on-primary":"#ffffff","on-secondary-container":"#663500","surface-container-low":"#e3f9f0","secondary-fixed-dim":"#ffb77d","surface-container-high":"#d7ede4","primary-container":"#0f766e","on-error-container":"#93000a","on-secondary":"#ffffff","background":"#e8fef6","secondary-container":"#fe932c","on-primary-container":"#a3faef","surface-variant":"#d2e7df","primary":"#005c55"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-sm":"0.5rem","gutter-mobile":"1rem","margin":"3rem","space-md":"1rem","space-lg":"1.5rem","gutter":"1.5rem","margin-mobile":"1.25rem","space-xs":"0.25rem","space-xl":"2.5rem"},"fontFamily":{"body-lg":["Manrope"],"body-sm":["Manrope"],"headline-xl":["Newsreader"],"headline-xl-mobile":["Newsreader"],"label-sm":["Manrope"],"headline-md":["Newsreader"],"label-lg":["Manrope"],"headline-lg":["Newsreader"],"headline-lg-mobile":["Newsreader"],"label-md":["Manrope"],"headline-sm":["Newsreader"],"body-md":["Manrope"]},"fontSize":{"body-lg":["18px",{"lineHeight":"28px","fontWeight":"400"}],"body-sm":["13px",{"lineHeight":"20px","fontWeight":"400"}],"headline-xl":["48px",{"lineHeight":"56px","letterSpacing":"-0.02em","fontWeight":"500"}],"headline-xl-mobile":["34px",{"lineHeight":"42px","letterSpacing":"-0.015em","fontWeight":"500"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"700"}],"headline-md":["26px",{"lineHeight":"34px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-lg":["14px",{"lineHeight":"20px","letterSpacing":"0.01em","fontWeight":"600"}],"headline-lg":["36px",{"lineHeight":"44px","letterSpacing":"-0.015em","fontWeight":"500"}],"headline-lg-mobile":["28px",{"lineHeight":"36px","letterSpacing":"-0.01em","fontWeight":"500"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}],"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"600"}],"body-md":["15px",{"lineHeight":"24px","fontWeight":"400"}]}}}}</script></head><body class="min-h-screen bg-surface-container-lowest text-on-surface font-body-md text-body-md antialiased relative overflow-x-hidden selection:bg-primary-fixed selection:text-on-primary-fixed"><div class="fixed inset-0 pointer-events-none z-0"><div class="absolute -top-48 -left-48 w-[640px] h-[640px] rounded-full bg-primary/5 blur-[120px]"></div><div class="absolute -bottom-48 -right-48 w-[640px] h-[640px] rounded-full bg-secondary-container/5 blur-[140px]"></div></div><header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(12,31,26,0.04)]"><div class="h-16 w-full max-w-[1280px] mx-auto px-gutter flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm"><img alt="SpeakCoach Brand Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1US39eXciCiYcZOetiyeigZAQkFIF3w2T8vixHX-vckn-DuWswxfvmP10LeoEV70I6icWI_LfTEUiGfZIoZHLmCJXD0-YnMJzBPDepO2AMOdu4fAJzT5fE-vy4rEdmGNQ3DzBt8o6Dnx5C5G8h7WeLLSyz3am42K7Lm9I0wCgMvpg8H462f_jpTBnfHzTzggwvHbDdMLFO1iWV8a4fDXdZujwDEyHAfX8bxOtGuw0fYh3lEG4sujH0pRrYd"/><span class="font-headline-sm text-headline-sm tracking-tight text-on-surface select-none">SpeakCoach</span></div><div class="h-5 w-[1px] bg-surface-container-highest"></div><nav class="flex items-center gap-space-xs" data-active-classes="bg-surface-container-high text-on-surface font-label-md"><a aria-current="page" class="px-space-md py-space-xs rounded-full transition-colors duration-150 bg-surface-container-high text-on-surface font-label-md" data-path="practice" href="#">Practice</a><a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150" data-path="reports" href="#">Reports</a><a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150" data-path="journey" href="#">Journey</a><a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150" data-path="live-studio" href="#">Live Studio</a><a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150" data-path="teams" href="#">Teams</a></nav></div><div class="flex items-center gap-space-sm"><div class="hidden xl:flex items-center gap-space-xs bg-surface-container-low px-space-md py-1 rounded-full shadow-[inset_0_1px_2px_rgba(12,31,26,0.04)]"><span class="text-label-md font-label-md select-none">🔥</span><span class="font-label-md text-label-md text-on-surface tracking-wide">4 days</span></div><div class="hidden lg:flex items-center gap-space-xs bg-surface-container-low px-space-md py-1 rounded-full shadow-[inset_0_1px_2px_rgba(12,31,26,0.04)]"><span class="text-label-md font-label-md text-primary select-none">⚡</span><span class="font-label-md text-label-md text-on-surface tracking-wide">1,240 XP <span class="text-on-surface-variant font-normal">· Lvl 3</span></span></div><div class="flex items-center gap-space-xs bg-surface-container-low px-space-md py-1 rounded-full shadow-[inset_0_1px_2px_rgba(12,31,26,0.04)]"><span class="text-label-md font-label-md select-none">🪙</span><span class="font-label-md text-label-md text-on-surface tracking-wide">14 sessions</span></div><div class="h-5 w-[1px] bg-surface-container-highest mx-space-xs hidden sm:block"></div><button class="flex items-center gap-space-sm pl-space-xs pr-space-sm py-1 rounded-full hover:bg-surface-container-low transition-colors duration-150 text-left cursor-pointer"><div class="relative flex items-center justify-center"><img alt="Profile" class="w-8 h-8 rounded-full object-cover shadow-[0_2px_6px_rgba(12,31,26,0.08)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCG-Vcs1ZhcV8nij2QcF1fkEkQ65zrGb96X8gTCyjIfJP68g0gxr4L3dX2wPpQVQ2wTHjlsPvLH-wqNuJHIeKx83LU_1AkndA27ARb1U2o6u9tL8H33rVrZaNESGPqRiYxdwX3a_DnsyqIux8WVpFI1DXACgtRd6xeoQHADLTKBWhsx5gbR1wB9sp14ZN3UVqHUxpDC3kD3GaJ2K8TYHSyd_6I__QKLMeQEIBFOZy8H1IWRa3brqzzLGA"/><span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-primary ring-2 ring-surface-container-lowest"></span></div><div class="hidden md:flex flex-col"><span class="font-label-md text-label-md text-on-surface leading-tight">Asha Patel</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-none">Founder Track</span></div><span class="material-symbols-outlined text-on-surface-variant text-[18px]">expand_more</span></button></div></div></header><main class="relative z-10 w-full pt-16 min-h-[calc(100vh-5rem)]"><div class="w-full max-w-[1280px] mx-auto px-gutter py-space-xl"><div class="flex flex-col w-full">
+<!-- Scenario Stepper Navigation -->
+<div class="w-full bg-surface-container-low rounded-xl px-space-lg py- space-md shadow-sm mb-space-lg">
+<div class="flex items-center justify-between overflow-x-auto gap-space-md py-1">
+<!-- Step 1 -->
+<div class="flex items-center gap-space-xs shrink-0 text-on-surface-variant">
+<span class="w-6 h-6 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</span>
+<span class="font-label-md text-label-md">1. Context &amp; Setup</span>
+</div>
+<div class="h-[1px] w-6 bg-surface-container-highest shrink-0"></div>
+<!-- Step 2 -->
+<div class="flex items-center gap-space-xs shrink-0 text-on-surface-variant">
+<span class="w-6 h-6 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</span>
+<span class="font-label-md text-label-md">2. Narrative Framework</span>
+</div>
+<div class="h-[1px] w-6 bg-surface-container-highest shrink-0"></div>
+<!-- Step 3 -->
+<div class="flex items-center gap-space-xs shrink-0 text-on-surface-variant">
+<span class="w-6 h-6 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</span>
+<span class="font-label-md text-label-md">3. Warm-Up Prompt</span>
+</div>
+<div class="h-[1px] w-6 bg-surface-container-highest shrink-0"></div>
+<!-- Step 4 -->
+<div class="flex items-center gap-space-xs shrink-0 text-on-surface-variant">
+<span class="w-6 h-6 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</span>
+<span class="font-label-md text-label-md">4. Live Rehearsal</span>
+</div>
+<div class="h-[1px] w-6 bg-surface-container-highest shrink-0"></div>
+<!-- Step 5: Active Feedback -->
+<div class="flex items-center gap-space-xs shrink-0">
+<span class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-sm text-label-sm font-bold shadow-sm">
+          5
+        </span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Feedback</span>
+<span class="ml-1 px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm tracking-wide">
+          EVALUATION COMPLETE
+        </span>
+</div>
+</div>
+</div>
+<!-- Header Section with Metadata and Actions -->
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md mb-space-xl">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface-variant">Founder Track · Interview Series</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Session #SC-9481</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">
+        Interview Basics: “Tell Me About Yourself”
+      </h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">
+        Completed Today at 2:15 PM · Duration: <span class="font-semibold text-on-surface">8m 42s</span> · Partner: <span class="font-semibold text-on-surface">Alex Rivera</span> (VP Product AI Simulation)
+      </p>
+</div>
+<!-- Top Action CTAs -->
+<div class="flex items-center gap-space-sm flex-wrap">
+<button class="px-space-md py-2.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-lg text-label-lg flex items-center gap-2 shadow-sm transition-all duration-150 cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">description</span>
+        Download PDF Report
+      </button>
+<button class="px-space-md py-2.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-lg text-label-lg flex items-center gap-2 shadow-sm transition-all duration-150 cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">share</span>
+        Share Report
+      </button>
+<button class="px-space-lg py-2.5 rounded-full bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg flex items-center gap-2 shadow-md hover:shadow-lg transition-all duration-150 cursor-pointer active:scale-95">
+<span class="material-symbols-outlined text-[18px]">replay</span>
+        Practice Again
+      </button>
+</div>
+</div>
+<!-- Hero Scorecard Card -->
+<div class="w-full bg-surface-container-lowest rounded-xl shadow-xl p-space-xl mb-space-xl relative overflow-hidden">
+<div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-primary/5 pointer-events-none blur-3xl"></div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-center relative z-10">
+<!-- Big Score Cluster -->
+<div class="lg:col-span-4 flex items-center gap-space-lg">
+<div class="relative w-36 h-36 shrink-0 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90 transform" viewbox="0 0 120 120">
+<circle class="text-surface-container-high" cx="60" cy="60" fill="transparent" r="50" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary" cx="60" cy="60" fill="transparent" r="50" stroke="currentColor" stroke-dasharray="314.159" stroke-dashoffset="69.1" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<span class="font-headline-xl text-headline-xl text-on-surface leading-none font-bold">78</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">out of 100</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="px-3 py-1 rounded-full bg-primary-container text-on-primary-container font-label-md text-label-md tracking-wider font-bold">
+              PASSED
+            </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Pass mark: 70</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-on-surface">Executive Readiness</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Ranked in top 18th percentile of initial pitch rehearsals.</span>
+</div>
+</div>
+<!-- Verdict Divider & Text -->
+<div class="lg:col-span-8 lg:pl-space-md lg:border-l lg:border-surface-container-highest">
+<div class="p-space-md bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-2 text-primary mb-1">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-bold">Executive Verdict</span>
+</div>
+<p class="font-headline-sm text-headline-sm text-on-surface italic leading-snug">
+            “Strong strategic narrative with compelling metrics. Closing call-to-action can be significantly more assertive to command the negotiation.”
+          </p>
+<div class="mt-space-sm flex items-center gap-space-lg text-on-surface-variant font-label-sm text-label-sm">
+<span>Coaching Model: <strong class="text-on-surface">Bixy-Speech-v4.2</strong></span>
+<span>Target Benchmark: <strong class="text-on-surface">Series A Founder Pitch</strong></span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Key Conversation Metrics Strip (4 Stat Widgets) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md mb-space-xl">
+<!-- Widget 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow duration-150 flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant mb-space-sm">
+<span class="font-label-md text-label-md">Talk / Listen Ratio</span>
+<span class="material-symbols-outlined text-[20px] text-primary">record_voice_over</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-on-surface">62% / 38%</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+          Ideal balance: 55–65% founder talk time.
+        </p>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden mt-space-sm">
+<div class="bg-primary h-full rounded-full" style="width: 62%;"></div>
+</div>
+</div>
+<!-- Widget 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow duration-150 flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant mb-space-sm">
+<span class="font-label-md text-label-md">Speaking Pace</span>
+<span class="material-symbols-outlined text-[20px] text-primary">speed</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-on-surface flex items-baseline gap-1">
+          138 <span class="text-label-md font-label-md font-normal text-on-surface-variant">WPM</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+          Optimal calm cadence: 130–150 WPM.
+        </p>
+</div>
+<div class="flex items-center gap-1 mt-space-sm">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-label-sm text-label-sm text-primary font-semibold">Steady Rhythm Maintained</span>
+</div>
+</div>
+<!-- Widget 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow duration-150 flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant mb-space-sm">
+<span class="font-label-md text-label-md">Filler Word Count</span>
+<span class="material-symbols-outlined text-[20px] text-secondary">mic_off</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-on-surface flex items-baseline gap-1">
+          3 <span class="text-label-md font-label-md font-normal text-on-surface-variant">instances</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+          Breakdown: ‘um’ ×2, ‘like’ ×1.
+        </p>
+</div>
+<div class="flex items-center gap-1 mt-space-sm">
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high font-label-sm text-label-sm text-on-surface-variant">
+          Low Frequency (0.34 / min)
+        </span>
+</div>
+</div>
+<!-- Widget 4 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow duration-150 flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant mb-space-sm">
+<span class="font-label-md text-label-md">Questions Asked</span>
+<span class="material-symbols-outlined text-[20px] text-secondary-container">help_outline</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-on-surface">2 questions</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+          Target: 3+ strategic inquiries recommended.
+        </p>
+</div>
+<div class="flex items-center gap-1 mt-space-sm">
+<span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">1 Missed Closing Inquiry</span>
+</div>
+</div>
+</div>
+<!-- Five Weighted Criteria Breakdown Section -->
+<div class="w-full bg-surface-container-lowest rounded-xl shadow-md p-space-xl mb-space-xl">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between mb-space-lg gap-2">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Core Competency Rubric</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Weighted against executive speech clarity standards and active investor heuristics.</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant">
+<span class="w-3 h-3 rounded-full bg-primary inline-block"></span> Strong (75+)
+        </span>
+<span class="flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant ml-2">
+<span class="w-3 h-3 rounded-full bg-secondary-container inline-block"></span> Growth Area (&lt;70)
+        </span>
+</div>
+</div>
+<div class="space-y-space-lg">
+<!-- Criteria 1 -->
+<div class="bg-surface-container-low rounded-lg p-space-md">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-2">
+<div class="flex items-center gap-space-sm">
+<span class="font-headline-sm text-headline-sm text-on-surface">1. Structure &amp; Clarity</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-highest font-label-sm text-label-sm text-on-surface-variant">Weight: 25%</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">85</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">/ 100</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden mb-space-sm">
+<div class="bg-primary h-full rounded-full transition-all duration-500" style="width: 85%;"></div>
+</div>
+<div class="flex items-start gap-2 bg-surface-container-lowest/80 p-space-sm rounded">
+<span class="material-symbols-outlined text-[16px] text-primary shrink-0 mt-0.5">format_quote</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant italic">
+            “Clear 3-phase narrative (Past → Present → Future role) without drifting into trivial bullet points.”
+          </p>
+</div>
+</div>
+<!-- Criteria 2 -->
+<div class="bg-surface-container-low rounded-lg p-space-md">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-2">
+<div class="flex items-center gap-space-sm">
+<span class="font-headline-sm text-headline-sm text-on-surface">2. Evidence &amp; Specifics</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-highest font-label-sm text-label-sm text-on-surface-variant">Weight: 20%</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">82</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">/ 100</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden mb-space-sm">
+<div class="bg-primary h-full rounded-full transition-all duration-500" style="width: 82%;"></div>
+</div>
+<div class="flex items-start gap-2 bg-surface-container-lowest/80 p-space-sm rounded">
+<span class="material-symbols-outlined text-[16px] text-primary shrink-0 mt-0.5">format_quote</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant italic">
+            “Quantified impact clearly: 42% deployment reduction and team scale of 8 engineers.”
+          </p>
+</div>
+</div>
+<!-- Criteria 3 -->
+<div class="bg-surface-container-low rounded-lg p-space-md">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-2">
+<div class="flex items-center gap-space-sm">
+<span class="font-headline-sm text-headline-sm text-on-surface">3. Listening &amp; Fit</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-highest font-label-sm text-label-sm text-on-surface-variant">Weight: 20%</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">76</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">/ 100</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden mb-space-sm">
+<div class="bg-primary h-full rounded-full transition-all duration-500" style="width: 76%;"></div>
+</div>
+<div class="flex items-start gap-2 bg-surface-container-lowest/80 p-space-sm rounded">
+<span class="material-symbols-outlined text-[16px] text-primary shrink-0 mt-0.5">format_quote</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant italic">
+            “Directly answered Alex’s follow-up on balancing engineering debt with deadlines.”
+          </p>
+</div>
+</div>
+<!-- Criteria 4 (Attention / Warning) -->
+<div class="bg-surface-container-low rounded-lg p-space-md">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-2">
+<div class="flex items-center gap-space-sm">
+<span class="font-headline-sm text-headline-sm text-on-surface">4. Curiosity &amp; Close</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container/20 text-on-secondary-container font-label-sm text-label-sm font-semibold">Needs Attention · Weight: 20%</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-headline-sm text-headline-sm text-secondary-container font-bold">68</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">/ 100</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden mb-space-sm">
+<div class="bg-secondary-container h-full rounded-full transition-all duration-500" style="width: 68%;"></div>
+</div>
+<div class="flex items-start gap-2 bg-surface-container-lowest/80 p-space-sm rounded">
+<span class="material-symbols-outlined text-[16px] text-secondary-container shrink-0 mt-0.5">priority_high</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant italic">
+            “Learner finished with a passive ‘So yeah, that’s me’ rather than asking an insightful closing inquiry.”
+          </p>
+</div>
+</div>
+<!-- Criteria 5 -->
+<div class="bg-surface-container-low rounded-lg p-space-md">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-2">
+<div class="flex items-center gap-space-sm">
+<span class="font-headline-sm text-headline-sm text-on-surface">5. Composure Under Pressure</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-highest font-label-sm text-label-sm text-on-surface-variant">Weight: 15%</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">80</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">/ 100</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden mb-space-sm">
+<div class="bg-primary h-full rounded-full transition-all duration-500" style="width: 80%;"></div>
+</div>
+<div class="flex items-start gap-2 bg-surface-container-lowest/80 p-space-sm rounded">
+<span class="material-symbols-outlined text-[16px] text-primary shrink-0 mt-0.5">format_quote</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant italic">
+            “Pace remained measured (138 WPM) even after Alex pushed on architectural trade-offs.”
+          </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Qualitative Coaching Analysis (2-Column Layout) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg mb-space-xl">
+<!-- Strengths -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-space-xs text-primary mb-space-md">
+<span class="material-symbols-outlined text-[22px]">thumb_up</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">What Worked Well (Strengths)</h3>
+</div>
+<div class="space-y-space-md">
+<div class="flex items-start gap-3">
+<span class="w-6 h-6 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[14px]">done</span>
+</span>
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface">Immediate Hook</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Anchored technical and leadership expertise within the first 15 seconds without throat-clearing.</p>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<span class="w-6 h-6 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[14px]">done</span>
+</span>
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface">Concrete Metrics</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Used 42% incident reduction as mathematical proof of architectural rigor and execution capability.</p>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<span class="w-6 h-6 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[14px]">done</span>
+</span>
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface">Authoritative Tone</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Calm, authoritative posture with zero defensive inflection when probed on team size discrepancies.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-space-lg pt-space-sm border-t border-surface-container-highest flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>Vocal Resonance: <strong>Optimal 120Hz</strong></span>
+<span>Confidence Index: <strong>92%</strong></span>
+</div>
+</div>
+<!-- Improvements -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-space-xs text-secondary-container mb-space-md">
+<span class="material-symbols-outlined text-[22px]">trending_up</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Key Opportunities (Improvements)</h3>
+</div>
+<div class="space-y-space-md">
+<div class="flex items-start gap-3">
+<span class="w-6 h-6 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[14px]">flag</span>
+</span>
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface">Strengthen the Landing</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Replace “So yeah, that’s me” with an inquiry: <em>“I’d love to hear how your engineering organization is currently balancing technical debt with rapid expansion.”</em></p>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<span class="w-6 h-6 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[14px]">flag</span>
+</span>
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface">Highlight Enterprise Scope</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Mention budget ownership or P&amp;L governance alongside the 8 engineers to reinforce executive weight.</p>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<span class="w-6 h-6 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[14px]">flag</span>
+</span>
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface">Intentional Pausing</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Insert a full 1.5s silent beat after delivering your headline thesis before introducing your prior role.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-space-lg pt-space-sm border-t border-surface-container-highest flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>Hesitation Bursts: <strong>1 Detected</strong></span>
+<span>Closing Strength: <strong>Fair</strong></span>
+</div>
+</div>
+</div>
+<!-- AI Coach Note & Recommended Micro-Drill Banner -->
+<div class="w-full bg-primary-container text-on-primary-container rounded-xl p-space-lg shadow-lg mb-space-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-space-lg">
+<div class="flex items-start gap-space-md">
+<div class="w-12 h-12 rounded-full bg-primary text-on-primary flex items-center justify-center font-headline-sm text-headline-sm shrink-0 shadow-md">
+        B
+      </div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-bold text-on-primary-container/80">Coach Bixy Insight</span>
+<span class="px-2 py-0.5 rounded-full bg-primary text-on-primary font-label-sm text-label-sm">Adaptive Priority</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-primary-container max-w-2xl">
+          “Your narrative structure is already in the top 15% of founders. Spend 5 minutes on the <strong>Executive Closing Hooks</strong> drill right now to elevate your Curiosity score above 85.”
+        </p>
+</div>
+</div>
+<button class="shrink-0 px-space-lg py-3 rounded-full bg-surface-container-lowest text-primary hover:bg-surface-bright font-label-lg text-label-lg flex items-center gap-2 shadow-lg transition-transform active:scale-95 cursor-pointer">
+      Launch 3-min Closing Drill →
+    </button>
+</div>
+<!-- Full Transcript Accordion Component -->
+<div class="w-full bg-surface-container-lowest rounded-xl shadow-md p-space-xl mb-space-xl">
+<div class="flex items-center justify-between cursor-pointer select-none" id="transcript-toggle">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[24px]">forum</span>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Interactive Turn-by-Turn Transcript</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">14 speaker turns analyzed with highlighted evidence quotes and acoustic flags.</p>
+</div>
+</div>
+<button class="flex items-center gap-1 font-label-md text-label-md text-primary hover:text-primary-container transition-colors">
+<span id="accordion-text">Collapse Transcript</span>
+<span class="material-symbols-outlined transition-transform duration-200" id="accordion-icon">expand_less</span>
+</button>
+</div>
+<!-- Transcript Body -->
+<div class="mt-space-lg space-y-space-md" id="transcript-body">
+<!-- Turn 1: Partner -->
+<div class="flex items-start gap-space-md p-space-sm rounded-lg hover:bg-surface-container-low transition-colors">
+<span class="font-label-md text-label-md text-on-surface-variant w-16 shrink-0 mt-1">00:04</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center font-label-sm text-label-sm shrink-0">
+          AR
+        </div>
+<div class="flex-1">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Alex Rivera (Partner)</span>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">
+            “Thanks for hopping on today, Asha. To start things off naturally, walk me through your background and how you think about your next chapter.”
+          </p>
+</div>
+</div>
+<!-- Turn 2: User with Positive Highlight -->
+<div class="flex items-start gap-space-md p-space-sm rounded-lg bg-surface-container-low transition-colors">
+<span class="font-label-md text-label-md text-on-surface-variant w-16 shrink-0 mt-1">00:18</span>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-sm text-label-sm shrink-0">
+          AP
+        </div>
+<div class="flex-1">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Asha Patel (You)</span>
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm">High Impact Hook</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface mt-1">
+<mark class="bg-primary/10 text-on-surface rounded px-1">“At my core, I build high-consequence infrastructure that lets technical teams move without breaking production.</mark> Over the past five years at ScaleMesh, I led our core platform engineering through three 10x throughput milestones.”
+          </p>
+</div>
+</div>
+<!-- Turn 3: User with Quantitative Highlight -->
+<div class="flex items-start gap-space-md p-space-sm rounded-lg bg-surface-container-low transition-colors">
+<span class="font-label-md text-label-md text-on-surface-variant w-16 shrink-0 mt-1">01:42</span>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-sm text-label-sm shrink-0">
+          AP
+        </div>
+<div class="flex-1">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Asha Patel (You)</span>
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm">Evidence Anchor</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface mt-1">
+            “Most notably, <mark class="bg-primary/10 text-on-surface rounded px-1">we realized a 42% deployment latency reduction while scaling the direct engineering group from three to eight distributed leads</mark>, eliminating our recurring P0 downtime window.”
+          </p>
+</div>
+</div>
+<!-- Turn 4: Partner Probing Question -->
+<div class="flex items-start gap-space-md p-space-sm rounded-lg hover:bg-surface-container-low transition-colors">
+<span class="font-label-md text-label-md text-on-surface-variant w-16 shrink-0 mt-1">03:10</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center font-label-sm text-label-sm shrink-0">
+          AR
+        </div>
+<div class="flex-1">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Alex Rivera (Partner)</span>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">
+            “That’s notable speed. But when product leadership wanted feature releases yesterday, how did you preserve team stamina while managing architectural debt?”
+          </p>
+</div>
+</div>
+<!-- Turn 5: User Answering with Measured Pace -->
+<div class="flex items-start gap-space-md p-space-sm rounded-lg bg-surface-container-low transition-colors">
+<span class="font-label-md text-label-md text-on-surface-variant w-16 shrink-0 mt-1">03:28</span>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-sm text-label-sm shrink-0">
+          AP
+        </div>
+<div class="flex-1">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Asha Patel (You)</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-highest font-label-sm text-label-sm text-on-surface-variant">Measured Pacing · 138 WPM</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface mt-1">
+<mark class="bg-primary/10 text-on-surface rounded px-1">“We instituted a transparent 80/20 cadence agreement: eighty percent on roadmap commitments and twenty percent uninterrupted refactoring.</mark> It made architectural debt an explicit line item rather than a silent team frustration.”
+          </p>
+</div>
+</div>
+<!-- Turn 6: User with Ending Opportunity Marker -->
+<div class="flex items-start gap-space-md p-space-sm rounded-lg bg-surface-container-low transition-colors">
+<span class="font-label-md text-label-md text-on-surface-variant w-16 shrink-0 mt-1">08:24</span>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-sm text-label-sm shrink-0">
+          AP
+        </div>
+<div class="flex-1">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Asha Patel (You)</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold">Needs Attention · Flat Close</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface mt-1">
+<mark class="bg-secondary-container/20 text-on-surface rounded px-1">“...and so yeah, that’s basically my arc and what brought me to connect today.”</mark>
+</p>
+<div class="mt-2 text-label-sm font-label-sm text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">tips_and_updates</span>
+            Coach Note: Missed opportunity to flip the dynamic with an executive question.
+          </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation and Next Scenario Action -->
+<div class="w-full flex flex-col sm:flex-row items-center justify-between gap-space-md pt-space-lg border-t border-surface-container-highest">
+<button class="px-space-lg py-2.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg flex items-center gap-2 transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+      Back to Practice Catalog
+    </button>
+<div class="flex items-center gap-space-sm w-full sm:w-auto">
+<button class="w-full sm:w-auto px-space-xl py-3 rounded-full bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all duration-150 cursor-pointer">
+        Next Scenario: “Why This Company?”
+        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    const toggle = document.getElementById('transcript-toggle');
+    const body = document.getElementById('transcript-body');
+    const icon = document.getElementById('accordion-icon');
+    const text = document.getElementById('accordion-text');
+
+    if (toggle && body && icon && text) {
+      toggle.addEventListener('click', function() {
+        const isHidden = body.classList.contains('hidden');
+        if (isHidden) {
+          body.classList.remove('hidden');
+          icon.textContent = 'expand_less';
+          text.textContent = 'Collapse Transcript';
+        } else {
+          body.classList.add('hidden');
+          icon.textContent = 'expand_more';
+          text.textContent = 'Expand 14 Turns';
+        }
+      });
+    }
+  })();
+</script></div></main><aside class="fixed bottom-6 right-6 z-40"><button class="group flex items-center gap-space-sm pl-space-md pr-space-lg py-2.5 bg-surface-container-lowest/95 backdrop-blur-md rounded-full shadow-[0_12px_32px_rgba(12,31,26,0.12)] hover:shadow-[0_16px_40px_rgba(12,31,26,0.16)] transition-all duration-200 cursor-pointer active:scale-95"><div class="w-7 h-7 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-label-md text-label-md shadow-sm">B</div><div class="flex flex-col text-left"><span class="font-label-sm text-label-sm text-primary uppercase tracking-wider">Bixy Coach</span><span class="font-label-md text-label-md text-on-surface">Need feedback on your pitch? <span class="text-primary-container font-semibold">Ask Bixy ✦</span></span></div></button></aside><footer class="w-full bg-surface-container-low py-space-xl"><div class="max-w-[1280px] mx-auto px-gutter flex flex-col sm:flex-row items-center justify-between gap-space-md text-on-surface-variant"><div class="flex items-center gap-space-sm"><span class="font-headline-sm text-headline-sm text-on-surface">SpeakCoach</span><span class="font-body-sm text-body-sm text-on-surface-variant">— Sanctioned vocal preparation for leaders.</span></div><div class="flex items-center gap-space-lg font-label-md text-label-md"><a class="text-on-surface-variant hover:text-on-surface transition-colors duration-150" href="#">Protocol Playbook</a><a class="text-on-surface-variant hover:text-on-surface transition-colors duration-150" href="#">Privacy Architecture</a><a class="text-on-surface-variant hover:text-on-surface transition-colors duration-150" href="#">Support Terminal</a></div></div></footer></body></html>

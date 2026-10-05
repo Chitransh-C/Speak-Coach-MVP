@@ -1,113 +1,82 @@
-# API Contracts (MVP)
+# API Contracts (v1)
 
 Base URL: `/api/v1`  
-Auth: Bearer session JWT (or cookie) on all except auth routes.  
-Product server: **Node/TypeScript**.
+Auth: Bearer JWT on all except auth routes.
 
 ## Auth
 
-### `POST /auth/signup`
-```json
-{ "email": "a@b.com", "password": "…", "displayName": "Sam" }
-```
-→ `{ "user": { "id", "email", "displayName" }, "token": "…" }`
+Unchanged: `POST /auth/signup`, `POST /auth/login`, `GET /me`.
 
-### `POST /auth/login`
-```json
-{ "email": "a@b.com", "password": "…" }
-```
-→ same shape as signup.
+## Tracks
 
-### `GET /me`
-→ `{ "id", "email", "displayName" }`
+### `GET /tracks`
+→ `{ "tracks": [{ "id", "title", "description", "sortOrder", "scenarioCount" }] }`
 
----
+## Locales (central catalog)
 
-## Scenario
+### `GET /locales`
+App-wide languages and voices (not per-scenario).
 
-### `GET /scenarios`
-One-element array for MVP (`scenario-001`).
+→ `{ "languages": [{ "code", "label", "sarvamName" }], "voices": [{ "id", "label", "gender" }] }`
 
-### `GET /scenarios/scenario-001`
-Full Learn + Watch payload + learner status + latest score summary if any.
+## Scenarios
 
----
+### `GET /scenarios?trackId=`
+Optional `trackId` filter.
+
+→ `{ "scenarios": [{ "id", "title", "description", "trackId", "trackTitle", "level", "estDurationMin", "availability", "participantName", "participantRole", "status", "latestScore" }] }`
+
+### `GET /scenarios/:scenarioId`
+Full detail including `learn`, `watch`, `participantGender`, `languages` / `voices` (from **central** catalog; voices already filtered to character gender), `defaults`, `canPractice`, `agentSource` (`track` \| `scenario` \| null), `passMark`.  
+Does **not** return API keys. Scenario DB `languages`/`voices` JSON is unused.
 
 ## Sessions
 
 ### `POST /sessions`
 ```json
-{ "scenarioId": "scenario-001" }
+{ "scenarioId": "scenario-001", "language": "en-IN", "voice": "shubh" }
 ```
 →
 ```json
 {
   "sessionId": "…",
-  "sarvam": {
+  "status": "created",
+  "scenarioId": "scenario-001",
+  "trackId": "interviews",
+  "language": "en-IN",
+  "sarvamLanguageName": "English",
+  "voice": "shubh",
+  "participantGender": "male",
+  "participantName": "Alex Rivera",
+  "agentSource": "track",
+  "agent": {
     "orgId": "…",
     "workspaceId": "…",
-    "appId": "Alex-Rivera-26a1cc8d-9a78",
-    "version": 1,
-    "proxyBaseUrl": "/api/sarvam/"
-  }
-}
-```
-
-Browser uses `ConversationAgent` with `apiKey: ""` and `baseUrl: proxyBaseUrl` so Node injects `X-API-Key`.
-
-### Sarvam key proxy
-
-` /api/sarvam/*` — reverse-proxy to `https://apps.sarvam.ai/api/app-runtime/…`  
-Adds `X-API-Key` from server env. Do not return the raw key to the client.
-
-### `POST /sessions/:sessionId/complete`
-```json
-{
-  "endedAt": "2026-09-26T10:00:00Z",
-  "durationMs": 240000,
-  "sarvamInteractionId": "…",
-  "transcript": {
-    "turns": [
-      { "speaker": "agent", "text": "…", "startedAtMs": 0, "endedAtMs": 3200 },
-      { "speaker": "learner", "text": "…", "startedAtMs": 3500, "endedAtMs": 22000 }
-    ]
+    "appId": "…",
+    "version": 2,
+    "proxyBaseUrl": "/api/sarvam",
+    "initialLanguage": "en-IN",
+    "sarvamLanguageName": "English",
+    "voice": "shubh",
+    "initialBotMessage": "Thanks for joining…",
+    "agentVariables": {
+      "scenario_title": "…",
+      "situation": "…",
+      "greeting": "…"
+    }
   },
-  "latency": {
-    "tConnectMs": 900,
-    "tFirstAudioMs": 1100
-  }
+  "tips": { "micGainHint": "…", "language": "en-IN", "voice": "shubh" }
 }
 ```
 
-**MVP preference:** score synchronously in this request if typically &lt; 15s:
-
-```json
-{
-  "sessionId": "…",
-  "status": "completed",
-  "score": { },
-  "insufficient": false
-}
-```
-
-Insufficient dialogue:
-```json
-{ "sessionId": "…", "status": "abandoned", "insufficient": true }
-```
+Errors: `404` unknown scenario; `409 SCENARIO_UNAVAILABLE` if `coming_soon` or no track/scenario agent; `400` invalid language or voice that does not match character gender.
 
 ### `GET /sessions/:sessionId`
-Session + transcript + score when ready.
+Session + optional score + `participantName`.
 
----
+### `POST /sessions/:sessionId/complete`
+Transcript + optional latency events → scorecard (uses scenario `passMark`).
 
-## Errors
+## Sarvam proxy
 
-```json
-{ "error": { "code": "SARVAM_UNAVAILABLE", "message": "…" } }
-```
-
-Codes: `UNAUTHORIZED`, `NOT_FOUND`, `SARVAM_UNAVAILABLE`, `VALIDATION_ERROR`, `SCORING_FAILED`.
-
-## Non-MVP
-
-Teams, Bixy, Studio, analytics, balance, scenario create, upload.
+`ALL /api/sarvam/*` — injects shared `X-API-Key` from env. No JWT required (browser SDK).

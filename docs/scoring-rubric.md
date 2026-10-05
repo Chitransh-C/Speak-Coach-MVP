@@ -66,6 +66,12 @@ If durations are unavailable, approximate from word counts and label clearly in 
 
 ## Scoring prompt rules
 
+- Track-aware system prompts live in `server/prompts/scoring-system-interviews.md` and `scoring-system-sales.md` (fallback `scoring-system.md`).
+- Scoring runs on session complete via `CHAT_PROVIDER` (prefer `gemini` in `server/.env`).
+- System/user prompts live in Postgres `prompts` table (seeded from `server/prisma/prompt-content.ts`), not markdown files.
+- Each scenario has its own `scoring_system` row (`scoring.system.<scenarioId>`) with track rubric + scenario objectives / what-good-looks-like.
+- Gemini uses structured outputs: `responseMimeType=application/json` + `responseJsonSchema` ([docs](https://aistudio.google.com/docs/structured-output)).
+- Heuristic fallback only if chat/JSON fails.
 - Use only the transcript (and speaker labels).  
 - Every strength / improvement should cite a quote or timestamp when possible.  
 - Do not invent events not in the transcript.  
