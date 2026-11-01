@@ -1,6 +1,6 @@
 # Scenario 001 — Interview Basics
 
-The **only** scenario in the SpeakCoach MVP.
+The **only** scenario in the RoleSmith MVP.
 
 ## Meta
 

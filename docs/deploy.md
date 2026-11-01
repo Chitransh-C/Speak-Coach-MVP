@@ -1,4 +1,4 @@
-# Deploy SpeakCoach on a single EC2 (no Docker for the app)
+# Deploy RoleSmith on a single EC2 (no Docker for the app)
 
 Target layout:
 
@@ -61,9 +61,9 @@ Create DB user/db (example):
 
 ```bash
 sudo -u postgres psql <<'SQL'
-CREATE USER speakcoach WITH PASSWORD 'CHANGE_ME_STRONG';
-CREATE DATABASE speakcoach OWNER speakcoach;
-GRANT ALL PRIVILEGES ON DATABASE speakcoach TO speakcoach;
+CREATE USER RoleSmith WITH PASSWORD 'CHANGE_ME_STRONG';
+CREATE DATABASE RoleSmith OWNER RoleSmith;
+GRANT ALL PRIVILEGES ON DATABASE RoleSmith TO RoleSmith;
 SQL
 ```
 
@@ -94,7 +94,7 @@ nano .env
 Minimum production values:
 
 ```env
-DATABASE_URL="postgresql://speakcoach:CHANGE_ME_STRONG@127.0.0.1:5432/speakcoach?schema=public"
+DATABASE_URL="postgresql://rolesmith:CHANGE_ME_STRONG@127.0.0.1:5432/rolesmith?schema=public"
 JWT_SECRET="long-random-secret"
 PORT=3001
 # Public site origin(s), comma-separated if needed
@@ -127,11 +127,11 @@ node dist/server.js  # smoke: curl http://127.0.0.1:3001/health
 
 ## 5. systemd unit for the API
 
-`/etc/systemd/system/speakcoach-api.service`:
+`/etc/systemd/system/rolesmith-api.service`:
 
 ```ini
 [Unit]
-Description=SpeakCoach API
+Description=RoleSmith API
 After=network.target postgresql.service
 
 [Service]
@@ -151,8 +151,8 @@ Adjust `User` / Node path (`which node`) as needed. Then:
 
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable --now speakcoach-api
-sudo systemctl status speakcoach-api
+sudo systemctl enable --now rolesmith-api
+sudo systemctl status rolesmith-api
 curl -s http://127.0.0.1:3001/health
 ```
 
@@ -179,7 +179,7 @@ Do **not** ship `localhost` in the production build.
 
 ## 7. nginx (SPA + `/api` proxy)
 
-`/etc/nginx/sites-available/speakcoach`:
+`/etc/nginx/sites-available/RoleSmith`:
 
 ```nginx
 server {
@@ -212,7 +212,7 @@ server {
 ```
 
 ```bash
-sudo ln -sf /etc/nginx/sites-available/speakcoach /etc/nginx/sites-enabled/
+sudo ln -sf /etc/nginx/sites-available/RoleSmith /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
@@ -241,7 +241,7 @@ git pull   # or rsync new release
 npm ci
 npm run db:deploy   # push schema + reseed catalog/prompts (idempotent upserts)
 npm run build
-sudo systemctl restart speakcoach-api
+sudo systemctl restart rolesmith-api
 
 # Frontend
 cd /path/to/frontend

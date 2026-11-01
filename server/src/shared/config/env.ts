@@ -16,50 +16,38 @@ const envSchema = z
     CORS_ORIGIN: z.string().default("http://localhost:5173"),
 
     /** Chat scoring provider: sarvam | gemini */
-    CHAT_PROVIDER: z.enum(["sarvam", "gemini"]).default("sarvam"),
-    /** Live voice provider: sarvam | gemini */
-    VOICE_PROVIDER: z.enum(["sarvam", "gemini"]).default("sarvam"),
+    CHAT_PROVIDER: z.enum(["sarvam", "gemini"]).default("gemini"),
 
-    /** Voice Agents key (sk_samvaad_…). Prefer SARVAM_VOICE_API_KEY. */
-    SARVAM_VOICE_API_KEY: z.string().optional(),
-    /** @deprecated use SARVAM_VOICE_API_KEY */
-    SARVAM_API_KEY: z.string().optional(),
-    /** Platform / dashboard key for Sarvam Chat Completions (not sk_samvaad_). */
+    /** Optional — only when CHAT_PROVIDER=sarvam */
     SARVAM_CHAT_API_KEY: z.string().optional(),
     SARVAM_CHAT_MODEL: z.string().default("sarvam-105b"),
 
+    /** Required for Live practice (Gemini Live + ephemeral tokens) */
     GEMINI_API_KEY: z.string().optional(),
     GEMINI_CHAT_MODEL: z.string().default("gemini-2.5-flash"),
-    GEMINI_VOICE_MODEL: z.string().default("gemini-2.5-flash-native-audio-preview-12-2025"),
+    GEMINI_VOICE_MODEL: z.string().default("gemini-3.8-live"),
+    /** Short voice samples on Setup (TTS generateContent). */
+    GEMINI_TTS_MODEL: z.string().default("gemini-2.5-flash-preview-tts"),
+    /** Hard cap for any practice Live call (minutes). */
+    GEMINI_LIVE_MAX_CALL_MINUTES: z.coerce.number().min(3).max(25).default(25),
+
+    /** Seeded platform admin (prisma seed) */
+    ADMIN_EMAIL: z.string().email().default("admin@rolesmith.local"),
+    ADMIN_PASSWORD: z.string().min(8).default("RoleSmithAdmin1!"),
+    ADMIN_DISPLAY_NAME: z.string().min(1).default("RoleSmith Admin"),
   })
   .superRefine((val, ctx) => {
-    const voiceKey = val.SARVAM_VOICE_API_KEY || val.SARVAM_API_KEY;
-    if (val.VOICE_PROVIDER === "sarvam" && !voiceKey) {
-      ctx.addIssue({
-        code: "custom",
-        message: "SARVAM_VOICE_API_KEY (or SARVAM_API_KEY) is required when VOICE_PROVIDER=sarvam",
-        path: ["SARVAM_VOICE_API_KEY"],
-      });
-    }
     if (val.CHAT_PROVIDER === "sarvam" && !val.SARVAM_CHAT_API_KEY) {
       ctx.addIssue({
         code: "custom",
-        message:
-          "SARVAM_CHAT_API_KEY is required when CHAT_PROVIDER=sarvam (Voice Agents sk_samvaad_ keys cannot call Chat Completions)",
+        message: "SARVAM_CHAT_API_KEY is required when CHAT_PROVIDER=sarvam",
         path: ["SARVAM_CHAT_API_KEY"],
       });
     }
-    if (val.CHAT_PROVIDER === "gemini" && !val.GEMINI_API_KEY) {
+    if (!val.GEMINI_API_KEY?.trim()) {
       ctx.addIssue({
         code: "custom",
-        message: "GEMINI_API_KEY is required when CHAT_PROVIDER=gemini",
-        path: ["GEMINI_API_KEY"],
-      });
-    }
-    if (val.VOICE_PROVIDER === "gemini" && !val.GEMINI_API_KEY) {
-      ctx.addIssue({
-        code: "custom",
-        message: "GEMINI_API_KEY is required when VOICE_PROVIDER=gemini",
+        message: "GEMINI_API_KEY is required for Gemini Live practice",
         path: ["GEMINI_API_KEY"],
       });
     }
@@ -74,12 +62,6 @@ export function corsOrigins(): string[] {
     .filter(Boolean);
 }
 
-export type Env = z.infer<typeof envSchema> & {
-  /** Resolved Voice Agents API key */
-  sarvamVoiceApiKey: string;
-};
+export type Env = z.infer<typeof envSchema>;
 
-export const env: Env = {
-  ...parsed,
-  sarvamVoiceApiKey: (parsed.SARVAM_VOICE_API_KEY || parsed.SARVAM_API_KEY || "").trim(),
-};
+export const env: Env = parsed;

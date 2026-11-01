@@ -43,7 +43,7 @@ Filled secrets live only in `.env` (never commit).
 
 ## Where to get IDs
 
-1. Indus → **Build → Agents** → open **SpeakCoach Interviews** or **SpeakCoach Sales**.  
+1. Indus → **Build → Agents** → open **RoleSmith Interviews** or **RoleSmith Sales**.  
 2. Open **Deploy with Code** on that agent (or use Voice Agents MCP `agents(commit)` response for `org_id` / `workspace_id` / `app_id`).  
 3. Copy IDs into [`server/prisma/seed.ts`](../server/prisma/seed.ts) and run `npm run db:seed`.  
 4. **API keys:** Voice Agents → `sk_samvaad_…`; platform/dashboard → chat key for scoring.
@@ -71,7 +71,7 @@ Current pins (seed):
 | Sales (female buyers) | `SpeakCoach--e8102ca0-0c25` | `5` | `priya` | Hello, thanks for joining the call. |
 | Sales (male buyers) | `SpeakCoach--7b2c1d05-a7e3` | `3` | `shubh` | Hello, thanks for joining the call. |
 
-**Languages:** English + 9 Indic (SpeakCoach central catalog). Default English.  
+**Languages:** English + 9 Indic (RoleSmith central catalog). Default English.  
 **Speaking:** Browser SDK does not override TTS at call start — seed assigns a gender-matched Sales agent per scenario (`priya` / `shubh`).  
 **Greeting:** Fixed on all agents: “Hello, thanks for joining the call.”
 

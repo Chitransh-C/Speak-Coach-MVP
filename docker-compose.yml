@@ -1,16 +1,16 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: speakcoach-postgres
+    container_name: rolesmith-postgres
     restart: unless-stopped
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: speakcoach
-      POSTGRES_PASSWORD: speakcoach
-      POSTGRES_DB: speakcoach
+      POSTGRES_USER: rolesmith
+      POSTGRES_PASSWORD: rolesmith
+      POSTGRES_DB: rolesmith
     volumes:
-      - speakcoach_pg_data:/var/lib/postgresql/data
+      - rolesmith_pg_data:/var/lib/postgresql/data
 
 volumes:
-  speakcoach_pg_data:
+  rolesmith_pg_data:

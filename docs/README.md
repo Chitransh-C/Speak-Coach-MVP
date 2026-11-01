@@ -1,6 +1,6 @@
-# SpeakCoach Docs
+# RoleSmith Docs
 
-Product docs for SpeakCoach **v1** (multi-scenario catalog) built on the MVP vertical slice.
+Product docs for RoleSmith **v1** (multi-scenario catalog) built on the MVP vertical slice.
 
 ## Reading order
 
@@ -40,4 +40,4 @@ Also update Key decisions table for scoring:
 
 ## Non-goals (v1)
 
-No nested sub-scenarios, admin CMS UI, Bixy, My Journey, teams, Live Studio, or 303-scenario catalog.
+No nested sub-scenarios, admin CMS UI, Lumi, My Journey, teams, Live Studio, or 303-scenario catalog.

@@ -19,7 +19,7 @@ One guided scenario, low-latency live **Sarvam** voice call, transcript-backed s
 
 ## Out of scope
 
-Bixy, My Journey, streaks/XP/certificates, scenario search, My Scenarios/upload, Live Studio, teams/leaderboards, analytics, body-language camera, 74 languages, appearance modes, token ledger, privacy deletion UI.
+Lumi, My Journey, streaks/XP/certificates, scenario search, My Scenarios/upload, Live Studio, teams/leaderboards, analytics, body-language camera, 74 languages, appearance modes, token ledger, privacy deletion UI.
 
 ## Success bar
 

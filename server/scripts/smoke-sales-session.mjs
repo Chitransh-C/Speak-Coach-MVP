@@ -1,9 +1,9 @@
-/** Smoke: Sales track session uses SpeakCoach Sales agent + proxy 200. */
+/** Smoke: Sales track session uses RoleSmith Sales agent + proxy 200. */
 const base = "http://localhost:3001";
 const EXPECTED_APP = "SpeakCoach--e8102ca0-0c25";
 const EXPECTED_VERSION = 2;
 
-const email = `sales-${Date.now()}@speakcoach.test`;
+const email = `sales-${Date.now()}@rolesmith.test`;
 const signupRes = await fetch(`${base}/api/v1/auth/signup`, {
   method: "POST",
   headers: { "Content-Type": "application/json" },

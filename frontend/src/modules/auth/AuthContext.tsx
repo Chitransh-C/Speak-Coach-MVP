@@ -8,7 +8,13 @@ import {
 } from "react";
 import { api } from "@/shared/api/client";
 
-export type User = { id: string; email: string; displayName: string };
+export type UserRole = "learner" | "admin";
+export type User = {
+  id: string;
+  email: string;
+  displayName: string;
+  role: UserRole;
+};
 
 type AuthState = {
   user: User | null;
@@ -20,14 +26,23 @@ type AuthState = {
 };
 
 const AuthContext = createContext<AuthState | null>(null);
-const TOKEN_KEY = "speakcoach_token";
-const USER_KEY = "speakcoach_user";
+const TOKEN_KEY = "rolesmith_token";
+const USER_KEY = "rolesmith_user";
+
+function normalizeUser(raw: User & { role?: string }): User {
+  return {
+    id: raw.id,
+    email: raw.email,
+    displayName: raw.displayName,
+    role: raw.role === "admin" ? "admin" : "learner",
+  };
+}
 
 function loadStored(): { token: string | null; user: User | null } {
   try {
     const token = localStorage.getItem(TOKEN_KEY);
     const raw = localStorage.getItem(USER_KEY);
-    return { token, user: raw ? (JSON.parse(raw) as User) : null };
+    return { token, user: raw ? normalizeUser(JSON.parse(raw) as User) : null };
   } catch {
     return { token: null, user: null };
   }
@@ -40,10 +55,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [ready] = useState(true);
 
   const persist = useCallback((nextToken: string, nextUser: User) => {
+    const normalized = normalizeUser(nextUser);
     localStorage.setItem(TOKEN_KEY, nextToken);
-    localStorage.setItem(USER_KEY, JSON.stringify(nextUser));
+    localStorage.setItem(USER_KEY, JSON.stringify(normalized));
     setToken(nextToken);
-    setUser(nextUser);
+    setUser(normalized);
   }, []);
 
   const login = useCallback(
@@ -85,6 +101,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth outside provider");
+  if (!ctx) throw new Error("useAuth requires AuthProvider");
   return ctx;
 }

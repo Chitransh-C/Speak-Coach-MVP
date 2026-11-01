@@ -1,4 +1,4 @@
-# SpeakCoach v1 scope
+# RoleSmith v1 scope
 
 Initial product version after the single-scenario MVP.
 
@@ -21,7 +21,7 @@ Multi-track catalog of top-level scenarios, practice setup (language + voice), l
 
 ## Out of scope
 
-Nested sub-scenarios, admin CMS UI, Bixy, My Journey, streaks/XP, teams, Live Studio, 74 languages, auto-creating Indus agents from SpeakCoach.
+Nested sub-scenarios, admin CMS UI, Lumi, My Journey, streaks/XP, teams, Live Studio, 74 languages, auto-creating Indus agents from RoleSmith.
 
 ## Success bar
 

@@ -6,7 +6,7 @@ Official docs: https://docs.sarvam.ai/conversations/deploy/deploy-with-code
 
 ## Responsibilities
 
-| Concern | Sarvam | SpeakCoach |
+| Concern | Sarvam | RoleSmith |
 |---|---|---|
 | STT / TTS / turn-taking | Voice Agents runtime | No |
 | Scenario persona | Agent Instructions in Indus UI (also mirror in `/prompts`) | Serve Learn/Watch content |
@@ -71,7 +71,7 @@ There is **no separate mint-token API**. SDK `start()` fetches a signed, **singl
 | Events | `interaction_connected`, `user_interrupt`, `user_speech_start/end`, `interaction_end` |
 | After | Indus Monitor / Log Analyser; optional fetch by `interaction_id` |
 
-MVP: buffer live transcripts in the client; POST to SpeakCoach on complete.
+MVP: buffer live transcripts in the client; POST to RoleSmith on complete.
 
 ## Client events (map to UI)
 

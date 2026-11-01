@@ -1,10 +1,10 @@
-# Indus track Voice Agents (SpeakCoach)
+# Indus track Voice Agents (RoleSmith)
 
-SpeakCoach uses **one Sarvam Voice Agent per track**. Scenarios inject content via **agent variables** at session start. Optional: a scenario may override with its own `sarvamAppId`.
+RoleSmith uses **one Sarvam Voice Agent per track**. Scenarios inject content via **agent variables** at session start. Optional: a scenario may override with its own `sarvamAppId`.
 
 ## Variable contract
 
-SpeakCoach sends these `agent_variables` (string values) on every call:
+RoleSmith sends these `agent_variables` (string values) on every call:
 
 | Variable | Source |
 |---|---|
@@ -24,7 +24,7 @@ SpeakCoach sends these `agent_variables` (string values) on every call:
 
 ### Indus / Samvaad rules (from Genie)
 
-1. **Syntax:** use `{{ variable_name }}` in Instructions and Greeting (spaces inside braces are fine). Do **not** rely on `@name` for SpeakCoach scenario injection — Samvaad only substitutes `{{ }}` for runtime `agent_variables`.
+1. **Syntax:** use `{{ variable_name }}` in Instructions and Greeting (spaces inside braces are fine). Do **not** rely on `@name` for RoleSmith scenario injection — Samvaad only substitutes `{{ }}` for runtime `agent_variables`.
 2. **Voice:** write instructions in **neutral third person** (“the agent plays the buyer…”, “the user is the learner…”). Avoid “You are…” when the call has two roles — it confuses which side the agent holds.
 3. **Language:** set spoken language in **Settings**, not in the prompt. A “speak English only” line fights multilingual runtime translation.
 4. **Input variables:** every `{{ name }}` you use must exist under Variables → Input variables (defaults can be empty).
@@ -36,7 +36,7 @@ SpeakCoach sends these `agent_variables` (string values) on every call:
 | Field | Value |
 |---|---|
 | App id | `SpeakCoach--2af8ce6a-b04b` |
-| Name | SpeakCoach Interviews |
+| Name | RoleSmith Interviews |
 | Org | `01a10b46-c948-764c-97a1-b2b72a88470d` |
 | Workspace | `01a10b46-c953-7fee-8018-bd18dfe8d310` |
 | Version | `2` (committed; industry interviewer prompt + multi-language + `call_language`) |
@@ -47,7 +47,7 @@ Replaces the old persona-hardcoded Alex Rivera app (`Alex-Rivera-26a1cc8d-9a78`)
 
 Neutral third-person interviewer prompt using the variable contract above (`{{ scenario_title }}`, `{{ situation }}`, `{{ objectives }}`, etc.). Greeting default: “Thanks for joining today. Let's begin.” (overridden per session by `initial_bot_message` / `greeting`).
 
-**Languages:** English, Hindi, Bengali, Tamil, Telugu, Marathi, Gujarati, Kannada, Malayalam, Punjabi (SpeakCoach central catalog). Default English. Voice preference is chosen in Setup by character gender; browser SDK does not yet override agent TTS speaker at call start.
+**Languages:** English, Hindi, Bengali, Tamil, Telugu, Marathi, Gujarati, Kannada, Malayalam, Punjabi (RoleSmith central catalog). Default English. Voice preference is chosen in Setup by character gender; browser SDK does not yet override agent TTS speaker at call start.
 
 After Indus edits, **Commit** and bump `tracks.sarvamVersion` in seed / DB.
 
@@ -58,7 +58,7 @@ After Indus edits, **Commit** and bump `tracks.sarvamVersion` in seed / DB.
 | Field | Value |
 |---|---|
 | App id | `SpeakCoach--e8102ca0-0c25` |
-| Name | SpeakCoach Sales |
+| Name | RoleSmith Sales |
 | Org / workspace | Same as Interviews |
 | Version | `2` (industry buyer prompt + multi-language + `call_language`) |
 
@@ -68,16 +68,16 @@ Prompt mirror is also stored in DB `prompts` (`voice.agent.sales`).
 
 1. Instructions: Genie’s buyer draft (neutral voice + `{{ }}` vars).  
 2. Variables: all names in the table above as Input variables.  
-3. Settings: **supported languages** match SpeakCoach central catalog (English + 9 Indic).  
-4. Greeting: optional `{{ greeting }}`; SpeakCoach also sends `initial_bot_message`.  
+3. Settings: **supported languages** match RoleSmith central catalog (English + 9 Indic).  
+4. Greeting: optional `{{ greeting }}`; RoleSmith also sends `initial_bot_message`.  
 5. After Indus edits, **Commit** and bump `tracks.sarvamVersion` if needed.
 
-### Genie follow-ups — what SpeakCoach needs
+### Genie follow-ups — what RoleSmith needs
 
 | Genie suggestion | Do it? |
 |---|---|
 | Dynamic intro via `greeting` / `user_name` | Optional. We already send `greeting` + `initial_bot_message`. Wiring Greeting to `{{ greeting }}` is nice; `user_name` is not required for v1. |
-| Post-call disposition / success metric in Indus | **Skip for now.** SpeakCoach scores after the call via our own `/sessions/:id/complete` + chat rubric. Indus dispositions would duplicate that. |
+| Post-call disposition / success metric in Indus | **Skip for now.** RoleSmith scores after the call via our own `/sessions/:id/complete` + chat rubric. Indus dispositions would duplicate that. |
 
 Org/workspace for Sales can match Interviews. Only `app_id` is new.
 
@@ -85,4 +85,4 @@ Org/workspace for Sales can match Interviews. Only `app_id` is new.
 
 ## Hybrid override
 
-If a scenario sets `sarvamAppId` (+ org/workspace), SpeakCoach uses that agent instead of the track agent (still sends the same variables).
+If a scenario sets `sarvamAppId` (+ org/workspace), RoleSmith uses that agent instead of the track agent (still sends the same variables).

@@ -1,5 +1,5 @@
 /**
- * Central frontend env — all API / voice-proxy URLs go through here.
+ * Central frontend env — API URLs for RoleSmith REST + Gemini Live mint.
  *
  * VITE_API_BASE_URL must be the full REST prefix, including /api/v1:
  *   http://localhost:3001/api/v1
@@ -18,10 +18,7 @@ export function getApiBaseUrl(): string {
   return trimTrailingSlash(raw || DEFAULT_API_BASE_URL);
 }
 
-/**
- * Host origin for non-v1 routes (e.g. Sarvam proxy /api/sarvam/...).
- * Derived from VITE_API_BASE_URL by stripping a trailing /api/v1.
- */
+/** Host origin derived from VITE_API_BASE_URL (strip trailing /api/v1). */
 export function getApiOrigin(): string {
   const base = getApiBaseUrl();
   const stripped = base.replace(/\/api\/v1$/i, "");

@@ -1,17 +1,21 @@
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { config as loadEnv } from "dotenv";
+import bcrypt from "bcryptjs";
 import { PrismaClient } from "@prisma/client";
 import { buildScenarioScoringPrompt, SEED_PROMPTS } from "./prompt-content.js";
 
 const prisma = new PrismaClient();
 const __dirname = dirname(fileURLToPath(import.meta.url));
+loadEnv({ path: resolve(__dirname, "../.env") });
+loadEnv({ path: resolve(__dirname, "../../.env") });
 
 /** Shared org/workspace from current Sarvam / Indus account. */
 const ORG = "01a10b46-c948-764c-97a1-b2b72a88470d";
 const WORKSPACE = "01a10b46-c953-7fee-8018-bd18dfe8d310";
 /**
- * Interviews track: variable-driven SpeakCoach Interviews agent
+ * Interviews track: variable-driven RoleSmith Interviews agent
  * (replaces persona-hardcoded Alex Rivera).
  */
 const INTERVIEWS_APP = "SpeakCoach--2af8ce6a-b04b";
@@ -20,8 +24,8 @@ const INTERVIEWS_VERSION = 4;
  * Sales track: browser SDK does not override TTS speaker at call start, so we pin
  * two Voice Agents and assign by participant gender.
  * Greeting on all agents: "Hello, thanks for joining the call."
- * - Female: SpeakCoach Sales (priya) — committed v5
- * - Male: SpeakCoach Sales Male (shubh) — committed v3
+ * - Female: RoleSmith Sales (priya) — committed v5
+ * - Male: RoleSmith Sales Male (shubh) — committed v3
  */
 const SALES_APP_FEMALE = "SpeakCoach--e8102ca0-0c25";
 const SALES_APP_FEMALE_VERSION = 5;
@@ -73,17 +77,60 @@ function salesScenario(
   };
 }
 
+async function seedAdmin() {
+  const email = (process.env.ADMIN_EMAIL || "admin@rolesmith.local").toLowerCase().trim();
+  const password = process.env.ADMIN_PASSWORD || "RoleSmithAdmin1!";
+  const displayName = process.env.ADMIN_DISPLAY_NAME || "RoleSmith Admin";
+  const passwordHash = await bcrypt.hash(password, 10);
+  await prisma.user.upsert({
+    where: { email },
+    create: {
+      email,
+      passwordHash,
+      displayName,
+      role: "admin",
+      disabledAt: null,
+    },
+    update: {
+      passwordHash,
+      displayName,
+      role: "admin",
+      disabledAt: null,
+    },
+  });
+  console.log(`Admin upserted: ${email} (role=admin)`);
+}
+
 async function main() {
-  // Catalog policy: exactly two tracks — interviews + sales.
+  await seedAdmin();
+  // Catalog tracks: interviews + sales; keep `personal` for user-created scenarios.
   await prisma.scenario.deleteMany({
-    where: { trackId: { notIn: ["interviews", "sales"] } },
+    where: {
+      trackId: { notIn: ["interviews", "sales", "personal"] },
+      ownerUserId: null,
+    },
   });
   await prisma.track.deleteMany({
-    where: { id: { notIn: ["interviews", "sales"] } },
+    where: { id: { notIn: ["interviews", "sales", "personal"] } },
   });
   // Interviews = one scenario only (Alex is hardcoded).
   await prisma.scenario.deleteMany({
-    where: { trackId: "interviews", id: { not: "scenario-001" } },
+    where: { trackId: "interviews", id: { not: "scenario-001" }, ownerUserId: null },
+  });
+
+  await prisma.track.upsert({
+    where: { id: "personal" },
+    create: {
+      id: "personal",
+      title: "Personal",
+      description: "User-created practice scenarios (private to each learner).",
+      sortOrder: 99,
+    },
+    update: {
+      title: "Personal",
+      description: "User-created practice scenarios (private to each learner).",
+      sortOrder: 99,
+    },
   });
 
   await prisma.track.upsert({
@@ -92,7 +139,7 @@ async function main() {
       id: "interviews",
       title: "Interviews",
       description:
-        "Interview practice — one Voice Agent with {{ variables }} per scenario (SpeakCoach Interviews).",
+        "Interview practice — one Voice Agent with {{ variables }} per scenario (RoleSmith Interviews).",
       sortOrder: 1,
       sarvamOrgId: ORG,
       sarvamWorkspaceId: WORKSPACE,
@@ -102,7 +149,7 @@ async function main() {
     update: {
       title: "Interviews",
       description:
-        "Interview practice — one Voice Agent with {{ variables }} per scenario (SpeakCoach Interviews).",
+        "Interview practice — one Voice Agent with {{ variables }} per scenario (RoleSmith Interviews).",
       sortOrder: 1,
       sarvamOrgId: ORG,
       sarvamWorkspaceId: WORKSPACE,
@@ -185,8 +232,8 @@ async function main() {
       title: "Sales Discovery: Uncover the Pain",
       description: "Open a discovery call, probe pain, and book a clear next step — no feature dump.",
       level: "beginner",
-      estDurationMin: 12,
-      practiceCallMin: 6,
+      estDurationMin: 15,
+      practiceCallMin: 8,
       learn: {
         greeting:
           "Hi — thanks for making time. Before we talk product, what's the biggest challenge on your plate this quarter?",
@@ -235,7 +282,7 @@ async function main() {
       description: "Buyer pushes on price. Defend value without discounting too early.",
       level: "intermediate",
       estDurationMin: 12,
-      practiceCallMin: 6,
+      practiceCallMin: 7,
       learn: {
         greeting:
           "I'll be direct — your pricing looks high versus what we're seeing elsewhere. Why should we pay a premium?",
@@ -278,8 +325,8 @@ async function main() {
       title: "Champion Check: Multi-Stakeholder",
       description: "Your champion is friendly, but the economic buyer is cold. Navigate both.",
       level: "intermediate",
-      estDurationMin: 14,
-      practiceCallMin: 7,
+      estDurationMin: 15,
+      practiceCallMin: 8,
       learn: {
         greeting:
           "I'm looping in our CFO for five minutes. Keep it tight — we've got a board meeting Friday.",
@@ -366,8 +413,8 @@ async function main() {
       title: "Renewal Risk: Save the Account",
       description: "Customer is frustrated and considering churn. Diagnose and recover.",
       level: "advanced",
-      estDurationMin: 14,
-      practiceCallMin: 7,
+      estDurationMin: 18,
+      practiceCallMin: 10,
       learn: {
         greeting:
           "I'm going to be blunt — adoption is low and my team is tired of workarounds. Why shouldn't we switch?",

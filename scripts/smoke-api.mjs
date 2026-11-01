@@ -1,7 +1,7 @@
 const base = "http://localhost:3001";
 
 async function main() {
-  const email = `v1-${Date.now()}@speakcoach.test`;
+  const email = `v1-${Date.now()}@rolesmith.test`;
   const signupRes = await fetch(`${base}/api/v1/auth/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

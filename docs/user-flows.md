@@ -57,5 +57,5 @@ Start practice
 
 ## Notes
 
-- No Bixy, no journey map, no setup wizard with language/accent.  
+- No Lumi, no journey map, no setup wizard with language/accent.  
 - Default: English + one fixed Sarvam voice/persona for Scenario 001.
