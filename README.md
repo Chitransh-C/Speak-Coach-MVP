@@ -1,4 +1,4 @@
-# SpeakCoach
+# RoleSmith
 
 AI communication practice: **Learn → Watch → Setup → Practice → Feedback**.
 
@@ -63,16 +63,16 @@ Check that the container is healthy:
 docker ps
 ```
 
-You should see `speakcoach-postgres` on port `5432`.
+You should see `rolesmith-postgres` on port `5432`.
 
 Default DB credentials (also used in `server/.env.example`):
 
 | Setting | Value |
 |---|---|
-| User | `speakcoach` |
-| Password | `speakcoach` |
-| Database | `speakcoach` |
-| URL | `postgresql://speakcoach:speakcoach@localhost:5432/speakcoach?schema=public` |
+| User | `rolesmith` |
+| Password | `rolesmith` |
+| Database | `rolesmith` |
+| URL | `postgresql://rolesmith:rolesmith@localhost:5432/rolesmith?schema=public` |
 
 Stop the DB later with:
 
@@ -96,7 +96,7 @@ cp .env.example .env
 Edit `server/.env` — **secrets and infra only** (no per-scenario agent ids):
 
 ```env
-DATABASE_URL="postgresql://speakcoach:speakcoach@localhost:5432/speakcoach?schema=public"
+DATABASE_URL="postgresql://rolesmith:rolesmith@localhost:5432/rolesmith?schema=public"
 JWT_SECRET="change-me-in-production"
 PORT=3001
 CORS_ORIGIN="http://localhost:5173"
@@ -151,7 +151,7 @@ npm run dev
 
 Expected:
 
-- Console: `SpeakCoach API on http://localhost:3001`
+- Console: `RoleSmith API on http://localhost:3001`
 - Health check: open http://localhost:3001/health → `{"ok":true}`
 
 Useful scripts:
@@ -265,7 +265,7 @@ Quick API smoke (with API already running):
 node scripts/smoke-api.mjs
 ```
 
-(Requires a user such as `demo@speakcoach.test` / `password123`, or edit the script.)
+(Requires a user such as `demo@rolesmith.test` / `password123`, or edit the script.)
 
 ---
 

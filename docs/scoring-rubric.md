@@ -1,6 +1,6 @@
 # Scoring Rubric (MVP)
 
-Aligned with the SpeakCoach brochure: **five criteria**, pass mark **70 / 100**.
+Aligned with the RoleSmith brochure: **five criteria**, pass mark **70 / 100**.
 
 ## Pass / fail
 

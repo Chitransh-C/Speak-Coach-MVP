@@ -265,7 +265,7 @@ async def main(device_index: Optional[int], gain: float) -> None:
         org_id=org_id,
         workspace_id=workspace_id,
         app_id=app_id,
-        user_identifier="speakcoach_local_demo",
+        user_identifier="rolesmith_local_demo",
         user_identifier_type=UserIdentifierType.CUSTOM,
         interaction_type=InteractionType.CALL,
         sample_rate=16000,
@@ -348,7 +348,7 @@ async def main(device_index: Optional[int], gain: float) -> None:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="SpeakCoach Sarvam voice smoke test")
+    parser = argparse.ArgumentParser(description="RoleSmith Sarvam voice smoke test")
     parser.add_argument("--list-devices", action="store_true", help="List mic devices and exit")
     parser.add_argument("--device", type=int, default=None, help="PyAudio input device index")
     parser.add_argument("--gain", type=float, default=4.0, help="Software mic gain (default 4)")

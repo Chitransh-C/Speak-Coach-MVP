@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 const apiKey = (process.env.SARVAM_CHAT_API_KEY || "").trim();
 const model = process.env.SARVAM_CHAT_MODEL || "sarvam-105b";
 const system = readFileSync(new URL("../prompts/scoring-system-interviews.md", import.meta.url), "utf8");
-const user = `Score this SpeakCoach practice transcript.
+const user = `Score this RoleSmith practice transcript.
 
 Track: interviews
 Pass mark: 70.

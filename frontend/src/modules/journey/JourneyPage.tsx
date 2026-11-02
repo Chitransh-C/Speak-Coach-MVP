@@ -3,7 +3,12 @@ import { Link } from "react-router-dom";
 import { api, HttpError } from "@/shared/api/client";
 import { useAuth } from "@/modules/auth/AuthContext";
 
-type Track = { id: string; title: string; scenarioCount: number };
+type Track = {
+  id: string;
+  title: string;
+  scenarioCount: number;
+  kind?: "catalog" | "personal";
+};
 
 type ScenarioListItem = {
   id: string;
@@ -24,12 +29,13 @@ export function JourneyPage() {
 
   useEffect(() => {
     Promise.all([
-      api<{ tracks: Track[] }>("/tracks", { token }),
+      api<{ tracks: Track[] }>("/tracks?includePersonal=1", { token }),
       api<{ scenarios: ScenarioListItem[] }>("/scenarios", { token }),
+      api<{ scenarios: ScenarioListItem[] }>("/scenarios/mine", { token }),
     ])
-      .then(([t, s]) => {
+      .then(([t, catalog, mine]) => {
         setTracks(t.tracks);
-        setItems(s.scenarios);
+        setItems([...catalog.scenarios, ...mine.scenarios]);
       })
       .catch((err) =>
         setError(err instanceof HttpError ? err.message : "Failed to load journey"),
@@ -58,14 +64,14 @@ export function JourneyPage() {
         </div>
         <h1 className="page-title">My practice journey</h1>
         <p className="page-lede">
-          Your real progress across Interviews and Sales — based on completed practice sessions.
+          Progress by track: Interviews, Sales, and your Personal scenarios.
         </p>
       </div>
 
       {error && <div className="error-banner">{error}</div>}
 
       <section className="panel stack-md">
-        <h2 style={{ fontSize: "1.25rem" }}>Catalog progress</h2>
+        <h2 style={{ fontSize: "1.25rem" }}>Overall progress</h2>
         <div>
           <div
             style={{
@@ -127,7 +133,15 @@ export function JourneyPage() {
         {byTrack.map((t) => (
           <section key={t.id} className="panel stack-sm">
             <div style={{ display: "flex", justifyContent: "space-between", gap: "0.5rem" }}>
-              <h2 style={{ fontSize: "1.25rem" }}>{t.title}</h2>
+              <h2 style={{ fontSize: "1.25rem" }}>
+                {t.title}
+                {t.kind === "personal" || t.id === "personal" ? (
+                  <span className="muted" style={{ fontSize: "0.8rem", fontWeight: 500 }}>
+                    {" "}
+                    · private
+                  </span>
+                ) : null}
+              </h2>
               <span className="muted" style={{ fontSize: "0.85rem" }}>
                 {t.done}/{t.scenarios.length}
               </span>
@@ -141,20 +155,27 @@ export function JourneyPage() {
                 }}
               />
             </div>
-            <ul className="list-check">
-              {t.scenarios.map((s) => (
-                <li key={s.id}>
-                  <Link to={`/scenarios/${s.id}/learn`}>
-                    {s.title}
-                    {s.status === "completed"
-                      ? ` — done${s.latestScore ? ` (${s.latestScore.overall})` : ""}`
-                      : s.availability === "live"
-                        ? " — open"
-                        : " — coming soon"}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            {t.scenarios.length === 0 && (t.kind === "personal" || t.id === "personal") ? (
+              <p className="muted" style={{ fontSize: "0.9rem" }}>
+                No personal scenarios yet.{" "}
+                <Link to="/scenarios/create">Create one</Link>
+              </p>
+            ) : (
+              <ul className="list-check">
+                {t.scenarios.map((s) => (
+                  <li key={s.id}>
+                    <Link to={`/scenarios/${s.id}/learn`}>
+                      {s.title}
+                      {s.status === "completed"
+                        ? ` — done${s.latestScore ? ` (${s.latestScore.overall})` : ""}`
+                        : s.availability === "live"
+                          ? " — open"
+                          : " — coming soon"}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
           </section>
         ))}
       </div>

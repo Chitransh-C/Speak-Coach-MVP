@@ -23,7 +23,7 @@ Single scenario (`scenario-001`), Learn → Watch → Practice → Feedback, Sar
 - Stronger insufficient-dialogue handling
 
 ### Guidance
-- Bixy, My Journey light, streaks / XP
+- Lumi, My Journey light, streaks / XP
 
 ### Scale & creation
 - Admin/content pipeline UI

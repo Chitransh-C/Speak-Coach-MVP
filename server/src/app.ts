@@ -7,7 +7,8 @@ import { registerAuthModule } from "./modules/auth/index.js";
 import { registerLocalesModule } from "./modules/locales/index.js";
 import { registerScenariosModule } from "./modules/scenarios/index.js";
 import { registerSessionsModule } from "./modules/sessions/index.js";
-import { registerSarvamModule } from "./modules/sarvam/index.js";
+import { registerGeminiModule } from "./modules/gemini/index.js";
+import { registerAdminModule } from "./modules/admin/index.js";
 
 export async function buildApp() {
   const app = Fastify({ logger: false });
@@ -38,7 +39,8 @@ export async function buildApp() {
   await registerLocalesModule(app);
   await registerScenariosModule(app);
   await registerSessionsModule(app);
-  await registerSarvamModule(app);
+  await registerGeminiModule(app);
+  await registerAdminModule(app);
 
   return app;
 }

@@ -18,6 +18,7 @@ type ScenarioListItem = {
   trackTitle: string;
   level: string;
   estDurationMin: number;
+  practiceCallMin?: number;
   availability: string;
   participantName: string;
   participantRole: string | null;
@@ -31,6 +32,12 @@ function initials(name: string) {
     .slice(0, 2)
     .map((p) => p[0]?.toUpperCase() ?? "")
     .join("");
+}
+
+function trackVisualClass(trackId: string) {
+  if (trackId.includes("sales")) return "scenario-visual--sales";
+  if (trackId.includes("interview")) return "scenario-visual--interview";
+  return "scenario-visual--default";
 }
 
 export function HomePage() {
@@ -63,59 +70,66 @@ export function HomePage() {
       return (
         s.title.toLowerCase().includes(q) ||
         s.description.toLowerCase().includes(q) ||
-        s.trackTitle.toLowerCase().includes(q)
+        s.trackTitle.toLowerCase().includes(q) ||
+        s.participantName.toLowerCase().includes(q)
       );
     });
   }, [items, trackFilter, query]);
 
   return (
-    <div className="stack-md">
-      <section className="hero-banner">
-        <div className="hero-banner-inner">
-          <div>
-            <div className="eyebrow">
-              <span className="eyebrow-dot" />
-              Catalog
-            </div>
-            <h1 className="page-title">Practice by track</h1>
-            <p className="page-lede">
-              Two tracks — Interviews and Sales — each with one Voice Agent. Scenarios inject
-              client/interviewer details via variables. Pick a scenario, then Learn → Watch → Setup
-              → Practice → Feedback.
-            </p>
-          </div>
+    <div className="catalog">
+      <header className="catalog-head">
+        <div>
+          <h1 className="catalog-title">Scenarios</h1>
+          <p className="catalog-lede">
+            Pick the kind of conversation you want to get better at.
+          </p>
         </div>
-      </section>
+        <Link className="btn btn-ghost catalog-journey-btn" to="/journey">
+          My Journey
+        </Link>
+      </header>
 
-      <div className="toolbar">
-        <div className="track-chips">
-          <button
-            type="button"
-            className={`chip ${trackFilter === "all" ? "active" : ""}`}
-            onClick={() => setTrackFilter("all")}
-          >
-            All
-            <span className="chip-count">{items.length}</span>
-          </button>
-          {tracks.map((t) => (
-            <button
-              key={t.id}
-              type="button"
-              className={`chip ${trackFilter === t.id ? "active" : ""}`}
-              onClick={() => setTrackFilter(t.id)}
-            >
-              {t.title}
-              <span className="chip-count">{t.scenarioCount}</span>
-            </button>
-          ))}
-        </div>
+      <div className="catalog-search">
+        <span className="catalog-search-icon" aria-hidden>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="11" cy="11" r="7" />
+            <path d="M20 20l-3.5-3.5" />
+          </svg>
+        </span>
         <input
-          className="toolbar-input"
-          style={{ minWidth: "12rem" }}
-          placeholder="Filter scenarios…"
+          className="catalog-search-input"
+          placeholder="Search all scenarios…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          aria-label="Search scenarios"
         />
+      </div>
+
+      <div className="catalog-filters" role="tablist" aria-label="Tracks">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={trackFilter === "all"}
+          className={`chip ${trackFilter === "all" ? "active" : ""}`}
+          onClick={() => setTrackFilter("all")}
+        >
+          All
+          <span className="chip-count">{items.length}</span>
+        </button>
+        {tracks.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            role="tab"
+            aria-selected={trackFilter === t.id}
+            className={`chip ${trackFilter === t.id ? "active" : ""}`}
+            onClick={() => setTrackFilter(t.id)}
+          >
+            {t.title}
+            <span className="chip-count">{t.scenarioCount}</span>
+          </button>
+        ))}
       </div>
 
       {error && <div className="error-banner">{error}</div>}
@@ -126,20 +140,20 @@ export function HomePage() {
           const partner = s.participantName || "Client";
           return (
             <article key={s.id} className={`scenario-card ${comingSoon ? "dimmed" : ""}`}>
-              <div className="stack-sm">
+              <div className={`scenario-visual ${trackVisualClass(s.trackId)}`} aria-hidden>
+                <span className="scenario-visual-label">{s.trackTitle}</span>
+              </div>
+              <div className="scenario-card-body">
                 <div className="card-meta">
-                  <div style={{ display: "flex", gap: "0.4rem", alignItems: "center" }}>
-                    <span className="track-badge">{s.trackTitle}</span>
-                    <span>· {s.level}</span>
-                  </div>
-                  <span>{s.estDurationMin} min</span>
+                  <span className="level-pill">{s.level}</span>
+                  <span>
+                    {s.practiceCallMin
+                      ? `${s.practiceCallMin} min call`
+                      : `${s.estDurationMin} min`}
+                  </span>
                 </div>
-                <div>
-                  <h2 style={{ fontSize: "1.2rem", marginBottom: "0.35rem" }}>{s.title}</h2>
-                  <p className="muted" style={{ fontSize: "0.88rem" }}>
-                    {s.description}
-                  </p>
-                </div>
+                <h2 className="scenario-card-title">{s.title}</h2>
+                <p className="scenario-card-desc">{s.description}</p>
                 <div className="partner-inset">
                   <span className="partner-avatar">{initials(partner)}</span>
                   <div>
@@ -152,7 +166,7 @@ export function HomePage() {
                   </div>
                 </div>
               </div>
-              <div className="stack-sm">
+              <div className="scenario-card-actions">
                 {s.latestScore ? (
                   <div className="score-chip">
                     Last score: <strong>{s.latestScore.overall}</strong>
@@ -161,7 +175,7 @@ export function HomePage() {
                 ) : comingSoon ? (
                   <p className="badge coming">Coming soon</p>
                 ) : (
-                  <div className="score-chip">Live interactive</div>
+                  <div className="score-chip">Live · Gemini</div>
                 )}
                 {comingSoon ? (
                   <button className="btn btn-ghost btn-block" type="button" disabled>
@@ -177,11 +191,12 @@ export function HomePage() {
           );
         })}
       </div>
+
       {!filtered.length && !error && (
         <div className="empty-state">
           <h2>No scenarios match</h2>
           <p className="muted" style={{ marginTop: "0.5rem" }}>
-            Try another track or clear the filter.
+            Try another track or clear the search.
           </p>
         </div>
       )}

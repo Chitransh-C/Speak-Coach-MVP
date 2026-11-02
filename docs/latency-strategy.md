@@ -15,7 +15,7 @@ Measure on desktop Chrome; prefer headset over laptop array for demos.
 
 ## Rules
 
-1. **No SpeakCoach API hop on the audio loop** — Voice Agents owns ASR→LLM→TTS.  
+1. **No RoleSmith API hop on the audio loop** — Voice Agents owns ASR→LLM→TTS.  
 2. **Warm / prefetch** — start Sarvam connect while user is on Watch / Start practice.  
 3. **Short live prompt** — long Learn copy stays in UI only.  
 4. **Stream TTS** — play first audio bytes immediately (`BrowserAudioInterface` buffering).  

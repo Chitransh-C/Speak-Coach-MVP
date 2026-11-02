@@ -105,7 +105,7 @@ async function getSignedUrl() {
   let url =
     `${base}orgs/${ORG}/workspaces/${WORKSPACE}/apps/${APP}/url` +
     `?interaction_type=call&version=${VERSION}` +
-    `&user_identifier=speakcoach_browser_tts_smoke` +
+    `&user_identifier=rolesmith_browser_tts_smoke` +
     `&user_identifier_type=custom`;
 
   const headers = {};

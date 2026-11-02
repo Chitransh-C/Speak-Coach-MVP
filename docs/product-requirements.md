@@ -6,7 +6,7 @@ Professionals need realistic practice for high-stakes conversations. Generic tip
 
 ## MVP proposition
 
-SpeakCoach MVP lets a learner prepare for a single interview-style conversation, rehearse it live against a Sarvam AI participant, and leave with a scored transcript they can act on.
+RoleSmith MVP lets a learner prepare for a single interview-style conversation, rehearse it live against a Sarvam AI participant, and leave with a scored transcript they can act on.
 
 ## Primary user
 

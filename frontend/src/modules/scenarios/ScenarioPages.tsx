@@ -7,6 +7,8 @@ import { JourneyStepper } from "@/shared/ui/JourneyStepper";
 type ScenarioDetail = {
   id: string;
   title: string;
+  trackId?: string;
+  ownerUserId?: string | null;
   availability: string;
   canPractice: boolean;
   learn: {
@@ -42,16 +44,20 @@ function useScenario() {
 function Shell({
   active,
   title,
+  backTo,
+  backLabel,
   children,
 }: {
   active: "learn" | "watch" | "setup" | "practice" | "feedback";
   title: string;
+  backTo?: string;
+  backLabel?: string;
   children: ReactNode;
 }) {
   return (
     <div className="stack-md">
-      <Link to="/" className="muted">
-        ← Practice catalog
+      <Link to={backTo ?? "/"} className="muted">
+        ← {backLabel ?? "Practice catalog"}
       </Link>
       <h1 className="page-title" style={{ fontSize: "clamp(1.6rem, 3vw, 2.2rem)" }}>
         {title}
@@ -60,6 +66,13 @@ function Shell({
       {children}
     </div>
   );
+}
+
+function scenarioBack(data: ScenarioDetail | null) {
+  const personal = data?.trackId === "personal" || Boolean(data?.ownerUserId);
+  return personal
+    ? { to: "/my-scenarios", label: "My Scenarios" }
+    : { to: "/", label: "Practice catalog" };
 }
 
 function isAgentSpeaker(speaker: string, participantName: string) {
@@ -73,8 +86,9 @@ export function LearnPage() {
   if (error) return <div className="error-banner">{error}</div>;
   if (!data) return <p className="muted">Loading brief…</p>;
   const { learn } = data;
+  const back = scenarioBack(data);
   return (
-    <Shell active="learn" title={data.title}>
+    <Shell active="learn" title={data.title} backTo={back.to} backLabel={back.label}>
       <section className="panel stack-md">
         <div className="eyebrow">
           <span className="eyebrow-dot" />
@@ -135,8 +149,9 @@ export function WatchPage() {
   if (error) return <div className="error-banner">{error}</div>;
   if (!data) return <p className="muted">Loading model dialogue…</p>;
   const participantName = data.learn.participant.name;
+  const back = scenarioBack(data);
   return (
-    <Shell active="watch" title={data.title}>
+    <Shell active="watch" title={data.title} backTo={back.to} backLabel={back.label}>
       <section className="panel">
         <p className="muted" style={{ marginBottom: "1rem" }}>
           Read a strong sample exchange before you go live.

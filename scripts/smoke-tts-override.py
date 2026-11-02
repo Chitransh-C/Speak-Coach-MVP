@@ -34,7 +34,7 @@ from sarvam_conv_ai_sdk import (  # noqa: E402
 )
 from sarvam_conv_ai_sdk.messages.types import UserIdentifierType  # noqa: E402
 
-# SpeakCoach Interviews (variable-driven) — committed multi-lang v2
+# RoleSmith Interviews (variable-driven) — committed multi-lang v2
 DEFAULT_APP = "SpeakCoach--b8e2a6f8-06c6"
 DEFAULT_VERSION = 2
 
@@ -101,7 +101,7 @@ async def run_once(speaker: str, language: SarvamToolLanguageName, timeout_s: fl
 
     config = InteractionConfig(
         user_identifier_type=UserIdentifierType.CUSTOM,
-        user_identifier="speakcoach_tts_smoke",
+        user_identifier="rolesmith_tts_smoke",
         org_id=org_id,
         workspace_id=workspace_id,
         app_id=app_id,
@@ -110,7 +110,7 @@ async def run_once(speaker: str, language: SarvamToolLanguageName, timeout_s: fl
         sample_rate=16000,
         initial_language_name=language,
         initial_bot_message=(
-            f"Hello. This is a SpeakCoach voice smoke test using speaker {speaker}."
+            f"Hello. This is a RoleSmith voice smoke test using speaker {speaker}."
         ),
         agent_variables={
             "participant_name": "Alex Rivera",

@@ -1,6 +1,6 @@
 /**
  * JSON Schema for Gemini structured outputs (responseJsonSchema).
- * Matches SpeakCoach scorecard + insufficient short-circuit.
+ * Matches RoleSmith scorecard + insufficient short-circuit.
  * @see https://aistudio.google.com/docs/structured-output
  */
 

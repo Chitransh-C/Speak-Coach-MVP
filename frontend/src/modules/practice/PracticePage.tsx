@@ -1,24 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import {
-  ConversationAgent,
-  BrowserAudioInterface,
-  InteractionType,
-} from "sarvam-conv-ai-sdk/browser";
 import { api, HttpError } from "@/shared/api/client";
-import { getApiOrigin } from "@/shared/config/env";
 import { useAuth } from "@/modules/auth/AuthContext";
 import { loadSetup } from "@/modules/scenarios/SetupPage";
 import { JourneyStepper } from "@/shared/ui/JourneyStepper";
+import { GeminiLiveSession } from "./geminiLiveSession";
+import { VoiceOrb } from "./VoiceOrb";
 
-type AgentConfig = {
-  orgId: string;
-  workspaceId: string;
-  appId: string;
-  version: number;
-  proxyBaseUrl: string;
+type VoiceRuntime = {
+  provider: "gemini";
+  config: Record<string, unknown>;
   initialLanguage?: string;
-  sarvamLanguageName?: string;
+  languageLabel?: string;
   voice?: string;
   initialBotMessage?: string;
   agentVariables?: Record<string, string>;
@@ -29,15 +22,21 @@ type Turn = {
   text: string;
   startedAtMs?: number;
   endedAtMs?: number;
+  /** False once the utterance is sealed (turn complete / interrupt / speaker change) */
+  open?: boolean;
 };
 
 type LatencyEvent = { name: string; atMs: number; meta?: Record<string, unknown> };
 
 type CallPhase = "idle" | "connecting" | "live" | "ending" | "error";
 
+type LiveHandle = {
+  stop: () => Promise<void> | void;
+};
+
 export function PracticePage() {
   const { scenarioId = "" } = useParams();
-  const { token, user } = useAuth();
+  const { token } = useAuth();
   const navigate = useNavigate();
   const [phase, setPhase] = useState<CallPhase>("idle");
   const [error, setError] = useState<string | null>(null);
@@ -45,7 +44,11 @@ export function PracticePage() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [hint, setHint] = useState<string | null>(null);
   const [participantName, setParticipantName] = useState("Agent");
-  const agentRef = useRef<ConversationAgent | null>(null);
+  const [callDurationMin, setCallDurationMin] = useState(5);
+  const [remainingSec, setRemainingSec] = useState<number | null>(null);
+  const [orbLevel, setOrbLevel] = useState(0);
+  const [speaking, setSpeaking] = useState<"user" | "bot" | "idle">("idle");
+  const liveRef = useRef<LiveHandle | null>(null);
   const participantRef = useRef("Agent");
   const t0 = useRef<number>(0);
   const latency = useRef<LatencyEvent[]>([]);
@@ -54,6 +57,7 @@ export function PracticePage() {
   const sessionIdRef = useRef<string | null>(null);
   const finishingRef = useRef(false);
   const transcriptBodyRef = useRef<HTMLDivElement | null>(null);
+  const callLimitMsRef = useRef<number>(5 * 60_000);
 
   useEffect(() => {
     turnsRef.current = turns;
@@ -75,32 +79,91 @@ export function PracticePage() {
 
   useEffect(() => {
     return () => {
-      void agentRef.current?.stop();
+      void liveRef.current?.stop();
     };
   }, []);
 
-  /** Append, or replace last turn when Sarvam streams progressive STT for the same speaker. */
-  function pushTurn(turn: Turn) {
+  // Countdown while live; auto end when scenario call budget is exhausted.
+  useEffect(() => {
+    if (phase !== "live") return;
+    const startedAt = performance.now();
+    const tick = () => {
+      const leftMs = callLimitMsRef.current - (performance.now() - startedAt);
+      const leftSec = Math.max(0, Math.ceil(leftMs / 1000));
+      setRemainingSec(leftSec);
+      if (leftMs <= 0 && !finishingRef.current) {
+        void endAndScore();
+      }
+    };
+    tick();
+    const id = window.setInterval(tick, 500);
+    return () => window.clearInterval(id);
+    // endAndScore is stable enough via refs; only re-arm when entering live.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase]);
+
+  /**
+   * Merge streaming chunks into one bubble while the turn is open.
+   * Sealed turns (`final` / `open: false`) stay put; next same-speaker speech is a new bubble.
+   */
+  function pushTurn(turn: Turn & { final?: boolean }) {
     setTurns((prev) => {
-      if (prev.length === 0) return [turn];
-      const last = prev[prev.length - 1];
-      if (last.speaker !== turn.speaker) return [...prev, turn];
-      const prevText = last.text.trim();
+      const nextOpen = turn.final === true ? false : turn.open !== false;
       const nextText = turn.text.trim();
-      if (!prevText || !nextText) return [...prev, turn];
-      const progressive =
-        nextText === prevText ||
-        nextText.startsWith(prevText) ||
-        prevText.startsWith(nextText);
-      if (!progressive) return [...prev, turn];
+      if (!nextText && prev.length === 0) return prev;
+
+      if (prev.length === 0) {
+        return [{ ...turn, text: nextText, open: nextOpen }];
+      }
+
+      const last = prev[prev.length - 1];
+      const sameSpeaker = last.speaker === turn.speaker;
+      const lastOpen = last.open !== false;
+
+      if (!sameSpeaker || !lastOpen) {
+        const sealed =
+          lastOpen && last.speaker !== turn.speaker
+            ? { ...last, open: false }
+            : last;
+        const head = lastOpen && last.speaker !== turn.speaker
+          ? [...prev.slice(0, -1), sealed]
+          : prev;
+        return [...head, { ...turn, text: nextText, open: nextOpen }];
+      }
+
+      const prevText = last.text.trim();
+      let text = nextText;
+      if (prevText && nextText) {
+        if (nextText === prevText || nextText.startsWith(prevText)) {
+          text = nextText;
+        } else if (prevText.startsWith(nextText) || prevText.endsWith(nextText)) {
+          text = prevText;
+        } else {
+          // Delta chunk from Live STT — keep one bubble
+          text = `${prevText} ${nextText}`;
+        }
+      } else {
+        text = prevText || nextText;
+      }
+
       const merged: Turn = {
-        ...turn,
-        text: nextText.length >= prevText.length ? nextText : prevText,
+        ...last,
+        text,
+        open: nextOpen,
         startedAtMs: last.startedAtMs ?? turn.startedAtMs,
-        endedAtMs: turn.endedAtMs ?? last.endedAtMs,
+        endedAtMs: turn.final ? (turn.endedAtMs ?? last.endedAtMs) : last.endedAtMs,
       };
       return [...prev.slice(0, -1), merged];
     });
+  }
+
+  function markFirstAgentAudio() {
+    if (!latency.current.some((e) => e.name === "first_agent_audio")) {
+      latency.current.push({
+        name: "first_agent_audio",
+        atMs: Math.round(performance.now() - t0.current),
+      });
+    }
   }
 
   async function endAndScore() {
@@ -109,13 +172,15 @@ export function PracticePage() {
     if (!id) return;
     finishingRef.current = true;
     setPhase("ending");
+    setOrbLevel(0.2);
+    setSpeaking("idle");
     setError(null);
     try {
-      await agentRef.current?.stop();
+      await liveRef.current?.stop();
     } catch {
       /* ignore hangup races */
     }
-    agentRef.current = null;
+    liveRef.current = null;
 
     const tScore0 = performance.now();
     const transcriptTurns =
@@ -154,10 +219,98 @@ export function PracticePage() {
     }
   }
 
+  async function startGeminiCall(created: {
+    voiceRuntime: VoiceRuntime;
+    language?: string;
+    languageLabel?: string;
+    voice?: string;
+    callDurationMin?: number;
+    participantGender?: "male" | "female";
+    participantName?: string;
+  }) {
+    const runtime = created.voiceRuntime;
+    const cfg = runtime.config;
+    const durationMin = Math.min(
+      25,
+      Math.max(3, Number(created.callDurationMin ?? cfg.callDurationMin ?? 5)),
+    );
+    callLimitMsRef.current = durationMin * 60_000;
+    setCallDurationMin(durationMin);
+    setRemainingSec(durationMin * 60);
+
+    const gemini = new GeminiLiveSession({
+      onOpen: () => {
+        latency.current.push({
+          name: "ws_connected",
+          atMs: Math.round(performance.now() - t0.current),
+        });
+        setPhase("live");
+        setSpeaking("idle");
+      },
+      onTranscript: (role, text, meta) => {
+        if (role === "bot") {
+          markFirstAgentAudio();
+          pushTurn({
+            speaker: participantRef.current,
+            text,
+            startedAtMs: Math.round(performance.now() - t0.current),
+            final: meta?.final === true,
+          });
+        } else {
+          pushTurn({
+            speaker: "Learner",
+            text,
+            startedAtMs: Math.round(performance.now() - t0.current),
+            final: meta?.final === true,
+          });
+        }
+      },
+      onLevel: (level) => setOrbLevel(level),
+      onSpeaking: (who) => setSpeaking(who),
+      onEnd: () => {
+        if (finishingRef.current) return;
+        if (phaseRef.current === "live" || phaseRef.current === "connecting") {
+          void endAndScore();
+        }
+      },
+      onError: (message) => {
+        if (finishingRef.current) return;
+        setPhase("error");
+        setError(message);
+      },
+    });
+
+    liveRef.current = gemini;
+
+    const languageCode = String(cfg.languageCode ?? created.language ?? "en-IN");
+    const voiceName = String(cfg.voiceName ?? runtime.voice ?? created.voice ?? "Kore");
+
+    await gemini.start({
+      authToken: token,
+      model: String(cfg.model ?? "gemini-3.8-live"),
+      voiceName,
+      languageCode,
+      languageLabel: String(
+        cfg.languageLabel ?? created.languageLabel ?? runtime.languageLabel ?? "English",
+      ),
+      // Mint maps voiceId → Gemini voice_name (same as voiceName for current catalog)
+      voiceId: voiceName,
+      gender: created.participantGender === "male" ? "male" : "female",
+      participantName: created.participantName || participantRef.current,
+      agentVariables: runtime.agentVariables ?? {},
+      callDurationMin: durationMin,
+      kickoffMessage:
+        runtime.initialBotMessage ||
+        "Please greet me briefly and start the practice conversation.",
+    });
+  }
+
   async function startCall() {
     setError(null);
     setPhase("connecting");
     setTurns([]);
+    setOrbLevel(0.2);
+    setSpeaking("idle");
     finishingRef.current = false;
     latency.current = [];
     t0.current = performance.now();
@@ -168,10 +321,13 @@ export function PracticePage() {
       const created = await api<{
         sessionId: string;
         participantName?: string;
+        participantGender?: "male" | "female";
         language?: string;
-        sarvamLanguageName?: string;
+        languageLabel?: string;
         voice?: string;
-        agent: AgentConfig;
+        practiceCallMin?: number;
+        callDurationMin?: number;
+        voiceRuntime?: VoiceRuntime;
         tips?: { micGainHint?: string };
       }>("/sessions", {
         method: "POST",
@@ -193,82 +349,19 @@ export function PracticePage() {
         atMs: Math.round(performance.now() - t0.current),
       });
 
-      const proxyBase = created.agent.proxyBaseUrl.startsWith("http")
-        ? created.agent.proxyBaseUrl
-        : `${getApiOrigin()}${created.agent.proxyBaseUrl}`;
-      const baseUrl = proxyBase.endsWith("/") ? proxyBase : `${proxyBase}/`;
-
-      const languageName =
-        created.agent.sarvamLanguageName ||
-        created.sarvamLanguageName ||
-        "English";
-
-      const audioInterface = new BrowserAudioInterface(16000);
-      const agent = new ConversationAgent({
-        apiKey: "",
-        baseUrl,
-        platform: "browser",
-        audioInterface,
-        config: {
-          org_id: created.agent.orgId,
-          workspace_id: created.agent.workspaceId,
-          app_id: created.agent.appId,
-          version: created.agent.version,
-          interaction_type: InteractionType.CALL,
-          user_identifier_type: "email",
-          user_identifier: user?.email ?? "learner@speakcoach.local",
-          input_sample_rate: 16000,
-          output_sample_rate: 16000,
-          // Sarvam expects LanguageName enum strings (e.g. "English"), not BCP-47.
-          initial_language_name: languageName as never,
-          // Only pass an explicit bot message when the server provided one
-          // (English). Non-English starts without it so the agent opens in-language.
-          ...(created.agent.initialBotMessage
-            ? { initial_bot_message: created.agent.initialBotMessage }
-            : {}),
-          agent_variables: created.agent.agentVariables ?? {},
-        },
-        startCallback: async () => {
-          latency.current.push({
-            name: "ws_connected",
-            atMs: Math.round(performance.now() - t0.current),
-          });
-          setPhase("live");
-        },
-        transcriptCallback: async (msg) => {
-          const text = (msg.content || "").trim();
-          if (!text) return;
-          if (msg.role === "bot") {
-            if (!latency.current.some((e) => e.name === "first_agent_audio")) {
-              latency.current.push({
-                name: "first_agent_audio",
-                atMs: Math.round(performance.now() - t0.current),
-              });
-            }
-            pushTurn({
-              speaker: participantRef.current,
-              text,
-              startedAtMs: Math.round(performance.now() - t0.current),
-            });
-          } else {
-            pushTurn({
-              speaker: "Learner",
-              text,
-              startedAtMs: Math.round(performance.now() - t0.current),
-            });
-          }
-        },
-        endCallback: async () => {
-          // Agent hangup (or stop()) — score and route to feedback once.
-          if (finishingRef.current) return;
-          if (phaseRef.current === "live" || phaseRef.current === "connecting") {
-            void endAndScore();
-          }
-        },
+      if (!created.voiceRuntime) {
+        throw new Error("Missing Gemini voiceRuntime from session create");
+      }
+      await startGeminiCall({
+        voiceRuntime: created.voiceRuntime,
+        language: created.language,
+        languageLabel: created.languageLabel,
+        voice: created.voice,
+        callDurationMin: created.callDurationMin ?? created.practiceCallMin,
+        participantGender: created.participantGender,
+        participantName: created.participantName,
       });
 
-      agentRef.current = agent;
-      await agent.start();
       latency.current.push({
         name: "start_session_resolved",
         atMs: Math.round(performance.now() - t0.current),
@@ -313,37 +406,67 @@ export function PracticePage() {
             <div className="partner-role">AI role-play partner</div>
           </div>
         </div>
-        {phase === "live" && (
-          <span className="live-badge">
-            <span className="dot" />
-            Live session
-          </span>
-        )}
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+          {phase === "live" && remainingSec != null && (
+            <span className="muted" style={{ fontVariantNumeric: "tabular-nums" }}>
+              {Math.floor(remainingSec / 60)}:{String(remainingSec % 60).padStart(2, "0")} left
+              <span style={{ opacity: 0.7 }}> · {callDurationMin} min call</span>
+            </span>
+          )}
+          {phase === "live" && (
+            <span className="live-badge">
+              <span className="dot" />
+              Live session
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="call-layout">
-        <section className="panel call-stage">
-          <div
-            className={`orb ${phase === "live" ? "listening" : ""} ${phase === "idle" || phase === "error" ? "idle" : ""}`}
-            aria-hidden
+        <section className="panel call-stage call-stage--voice">
+          <p className="voice-orb-label">
+            {phase === "live"
+              ? speaking === "user"
+                ? "YOU"
+                : speaking === "bot"
+                  ? participantName.toUpperCase()
+                  : "LISTENING"
+              : phase === "connecting"
+                ? "CONNECTING"
+                : phase === "ending"
+                  ? "SCORING"
+                  : "READY"}
+          </p>
+
+          <VoiceOrb
+            level={
+              phase === "live"
+                ? orbLevel
+                : phase === "connecting" || phase === "ending"
+                  ? 0.25
+                  : 0.08
+            }
+            active={phase === "live" || phase === "connecting" || phase === "ending"}
           />
-          <div style={{ position: "relative", zIndex: 1 }}>
-            <h2>
-              {phase === "idle" && "Ready when you are"}
-              {phase === "connecting" && "Connecting…"}
-              {phase === "live" && `${participantName} is listening…`}
-              {phase === "ending" && "Scoring your call…"}
-              {phase === "error" && "Something went wrong"}
-            </h2>
-            <p className="muted" style={{ marginTop: "0.4rem" }}>
-              Allow microphone access. Prefer a headset for clearer capture.
-            </p>
-            {hint && (
-              <p className="muted" style={{ marginTop: "0.35rem", fontSize: "0.85rem" }}>
-                {hint}
-              </p>
-            )}
+
+          <div className="voice-orb-caption">
+            {phase === "idle" && "Ready when you are"}
+            {phase === "connecting" && "Connecting…"}
+            {phase === "live" &&
+              (speaking === "user"
+                ? "You're speaking"
+                : speaking === "bot"
+                  ? `${participantName} is speaking`
+                  : `${participantName} is listening…`)}
+            {phase === "ending" && "Scoring your call…"}
+            {phase === "error" && "Something went wrong"}
           </div>
+
+          {hint && phase !== "live" && (
+            <p className="muted" style={{ marginTop: "0.25rem", fontSize: "0.85rem" }}>
+              {hint}
+            </p>
+          )}
 
           {error && <div className="error-banner">{error}</div>}
 
@@ -368,12 +491,12 @@ export function PracticePage() {
 
         <section className="panel call-transcript">
           <h2 className="call-transcript-head">Live transcript</h2>
-          {turns.length === 0 ? (
-            <p className="muted call-transcript-empty" style={{ marginTop: "1rem" }}>
-              Turns will appear here once the call starts.
-            </p>
-          ) : (
-            <div className="call-transcript-body" ref={transcriptBodyRef}>
+          <div className="call-transcript-body" ref={transcriptBodyRef}>
+            {turns.length === 0 ? (
+              <p className="muted call-transcript-empty">
+                Turns will appear here once the call starts.
+              </p>
+            ) : (
               <div className="dialogue">
                 {turns.map((t, i) => (
                   <div
@@ -385,8 +508,8 @@ export function PracticePage() {
                   </div>
                 ))}
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </section>
       </div>
     </div>

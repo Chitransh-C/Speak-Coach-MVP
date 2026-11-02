@@ -4,7 +4,7 @@
 
 ```
 ┌─────────────────┐   HTTPS        ┌──────────────────┐
-│  React client   │◄──────────────►│  SpeakCoach API  │
+│  React client   │◄──────────────►│  RoleSmith API  │
 │  (Vite/TS)      │                │  (Node/TS)       │
 └────────┬────────┘                └────────┬─────────┘
          │                                  │
@@ -21,9 +21,9 @@
 
 ## Principles
 
-1. **Latency path is sacred** — mic audio must not round-trip through SpeakCoach business logic. Prefer Sarvam’s realtime Voice Agents path.  
+1. **Latency path is sacred** — mic audio must not round-trip through RoleSmith business logic. Prefer Sarvam’s realtime Voice Agents path.  
 2. **Never ship voice/chat API keys to the browser** — Node holds secrets; browser uses empty `apiKey` + proxy (Sarvam) or ephemeral tokens (future Gemini).  
-3. **SpeakCoach API owns truth** — users, scenario content, sessions, transcripts, scores.  
+3. **RoleSmith API owns truth** — users, scenario content, sessions, transcripts, scores.  
 4. **Voice runtime is pluggable** — `VOICE_PROVIDER` Strategy (`sarvam` live; `gemini` scaffold).  
 5. **Score after the call** — `CHAT_PROVIDER` Strategy (`sarvam-105b` or Gemini) on transcript; do not block mid-call UX.
 
@@ -34,7 +34,7 @@
 - Mic + speaker via `ConversationAgent` + `BrowserAudioInterface` (16 kHz PCM mono).  
 - Buffers live transcripts from `transcriptCallback`.
 
-### SpeakCoach API (Node)
+### RoleSmith API (Node)
 - Auth + profile.  
 - **Catalog:** tracks + scenarios from Postgres (seeded; Learn/Watch JSON).  
 - **Voice agents:** one Sarvam app per track; scenarios inject `agent_variables`; optional scenario override.  
@@ -63,7 +63,7 @@ Code: `server/src/modules/ai/chat` and `server/src/modules/ai/voice` (Strategy f
 
 ## Session lifecycle
 
-1. Client: `POST /sessions` → SpeakCoach `sessionId`.  
+1. Client: `POST /sessions` → RoleSmith `sessionId`.  
 2. Client ↔ Sarvam (via Node proxy): live voice until End call / `interaction_end`.  
 3. Client: send transcript turns to `POST /sessions/:id/complete`.  
 4. API: score via `CHAT_PROVIDER` Strategy; persist; return scorecard.  
@@ -75,11 +75,11 @@ Code: `server/src/modules/ai/chat` and `server/src/modules/ai/voice` (Strategy f
 Mic → Sarvam ASR → Sarvam LLM → Sarvam TTS → speaker
 ```
 
-Do **not** insert SpeakCoach REST in this loop.
+Do **not** insert RoleSmith REST in this loop.
 
 ## Security
 
 - HTTPS / WSS everywhere.  
 - Voice Agents key: `SARVAM_VOICE_API_KEY` (`sk_samvaad_…`) in API env only.  
 - Chat key: `SARVAM_CHAT_API_KEY` (platform key) separate from Voice Agents.  
-- JWT for SpeakCoach API.
+- JWT for RoleSmith API.

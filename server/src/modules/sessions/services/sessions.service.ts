@@ -1,44 +1,43 @@
 import { AppError } from "../../../shared/http/errors.js";
+import { env } from "../../../shared/config/env.js";
 import {
   defaultVoiceForGender,
   isLanguageCode,
   isVoiceId,
-  toSarvamLanguageName,
+  languageLabel as resolveLanguageLabel,
+  normalizeVoiceId,
 } from "../../../shared/catalog/locale.js";
 import { getVoiceRuntime } from "../../ai/voice/index.js";
+import { clampCallDurationMin } from "../../gemini/services/gemini.ephemeral.service.js";
 import { scoringService } from "../../scoring/services/scoring.service.js";
 import {
+  canPracticeOwnedScenario,
   participantGender,
   participantName,
   scenariosRepository,
 } from "../../scenarios/repositories/scenarios.repository.js";
-import {
-  buildAgentVariables,
-  resolveVoiceAgent,
-} from "../../scenarios/services/voice-agent.resolve.js";
+import { buildAgentVariables } from "../../scenarios/services/voice-agent.resolve.js";
 import { sessionsRepository } from "../repositories/sessions.repository.js";
 import type {
   CompleteSessionInput,
   CreateSessionInput,
 } from "../schemas/sessions.schemas.js";
 
+function isEnglishLocale(code: string): boolean {
+  return code === "en-IN" || code === "en-US";
+}
+
 export const sessionsService = {
   async create(userId: string, input: CreateSessionInput) {
     const scenario = await scenariosRepository.findById(input.scenarioId);
-    if (!scenario) {
-      throw new AppError(404, "NOT_FOUND", "Scenario not found");
-    }
-    if (scenario.availability !== "live") {
+    if (!scenario || !canPracticeOwnedScenario(scenario, userId)) {
+      if (!scenario || scenario.ownerUserId != null) {
+        throw new AppError(404, "NOT_FOUND", "Scenario not found");
+      }
       throw new AppError(409, "SCENARIO_UNAVAILABLE", "Scenario is not available for practice yet");
     }
-
-    const voiceAgent = resolveVoiceAgent(scenario);
-    if (!voiceAgent) {
-      throw new AppError(
-        409,
-        "SCENARIO_UNAVAILABLE",
-        "No Sarvam agent configured for this scenario or its track. Set track.sarvamAppId (or a scenario override).",
-      );
+    if (!env.GEMINI_API_KEY?.trim()) {
+      throw new AppError(503, "VOICE_UNAVAILABLE", "GEMINI_API_KEY is required for live practice");
     }
 
     const gender = participantGender(scenario);
@@ -56,11 +55,12 @@ export const sessionsService = {
 
     const language =
       input.language && isLanguageCode(input.language) ? input.language : "en-IN";
-    const voice =
+    const voice = normalizeVoiceId(
       input.voice && isVoiceId(input.voice, gender)
         ? input.voice
-        : defaultVoiceForGender(gender);
-    const sarvamLanguageName = toSarvamLanguageName(language);
+        : defaultVoiceForGender(gender),
+    );
+    const languageLabel = resolveLanguageLabel(language);
 
     const session = await sessionsRepository.create(userId, scenario.id, {
       language,
@@ -70,37 +70,23 @@ export const sessionsService = {
     const baseVariables = buildAgentVariables(scenario);
     const agentVariables = {
       ...baseVariables,
-      call_language: sarvamLanguageName,
-      ...(language === "en-IN" ? {} : { greeting: "" }),
+      call_language: languageLabel,
+      ...(isEnglishLocale(language) ? {} : { greeting: "" }),
     };
-    const initialBotMessage =
-      language === "en-IN" ? agentVariables.greeting : undefined;
+    const initialBotMessage = isEnglishLocale(language)
+      ? agentVariables.greeting
+      : undefined;
 
     const voiceBootstrap = getVoiceRuntime().buildClientBootstrap({
-      agent: voiceAgent,
       language,
-      sarvamLanguageName,
+      languageLabel,
       voice,
+      gender,
       initialBotMessage,
       agentVariables,
-      proxyBaseUrl: "/api/sarvam",
     });
 
-    // Backward-compatible flat `agent` for current PracticePage (Sarvam SDK).
-    const agent = {
-      ...(voiceBootstrap.config as {
-        orgId: string;
-        workspaceId: string;
-        appId: string;
-        version: number;
-        proxyBaseUrl: string;
-      }),
-      initialLanguage: language,
-      sarvamLanguageName,
-      voice,
-      initialBotMessage,
-      agentVariables,
-    };
+    const practiceCallMin = clampCallDurationMin(scenario.practiceCallMin);
 
     return {
       sessionId: session.id,
@@ -108,19 +94,27 @@ export const sessionsService = {
       scenarioId: scenario.id,
       trackId: scenario.trackId,
       language,
-      sarvamLanguageName,
+      languageLabel,
       voice,
+      practiceCallMin,
+      callDurationMin: practiceCallMin,
       participantGender: gender,
       participantName: participantName(scenario),
-      agentSource: voiceAgent.source,
-      voiceProvider: voiceBootstrap.provider,
-      voiceRuntime: voiceBootstrap,
-      agent,
+      agentSource: "gemini" as const,
+      voiceProvider: "gemini" as const,
+      voiceRuntime: {
+        ...voiceBootstrap,
+        config: {
+          ...voiceBootstrap.config,
+          callDurationMin: practiceCallMin,
+        },
+      },
       tips: {
         micGainHint:
           "Laptop array mics often need software gain (~8x). Prefer a headset mic for demos.",
         language,
         voice,
+        practiceCallMin,
       },
     };
   },

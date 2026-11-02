@@ -9,7 +9,7 @@ const learnerParagraph =
   "I would love to hear how your team measures success for similar initiatives.";
 
 async function main() {
-  const email = `score-${Date.now()}@speakcoach.test`;
+  const email = `score-${Date.now()}@rolesmith.test`;
   const signupRes = await fetch(`${base}/api/v1/auth/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
